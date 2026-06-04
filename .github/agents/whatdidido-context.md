@@ -22,16 +22,16 @@ App.tsx (composition root)
             └── AttachmentList
 ```
 
-## IssueCard — collapsed
+## IssueCard - collapsed
 
 - Type emoji + key + assignee chip | status badge (colored) + chevron
 - Summary
 - Meta chips: priority · updated date · `💬 N` · `🔄 Status changed` (amber, if changed yesterday)
 
-## IssueCard — expanded (section order)
+## IssueCard - expanded (section order)
 
 1. Description (plain text)
-2. Yesterday's Status Changes — `from → to`, timestamp, author
+2. Yesterday's Status Changes - `from → to`, timestamp, author
 3. Attachments (lazy blob load on click)
 4. Comments (plain text body)
 5. Worklogs (lazy on expand via `onLoadWorklogs` callback)

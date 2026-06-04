@@ -1,6 +1,6 @@
 # what-i-did
 
-Desktop app that fetches your Jira activity from the previous working day and displays it in a clean summary — so you can quickly recap during the daily standup.
+Desktop app that fetches your Jira activity from the previous working day and displays it in a clean summary - so you can quickly recap during the daily standup.
 
 Built with **Tauri 2 · React · TypeScript · Vite**.
 
@@ -11,7 +11,7 @@ Built with **Tauri 2 · React · TypeScript · Vite**.
 - Fetches all Jira issues you worked on yesterday (updated by you in the last 24h)
 - Groups issues by project
 - Shows issue status, type, priority, comments, and attachments
-- One-click **Copy standup summary** — pastes a ready-to-send bullet list to your clipboard
+- One-click **Copy standup summary** - pastes a ready-to-send bullet list to your clipboard
 - Credentials stored locally via Tauri's secure store plugin (never leave your machine)
 
 ## Requirements

@@ -7,10 +7,10 @@ description: Clean Architecture reference for what-i-did. Use for any structural
 
 ```
 src/
-├── domain/               zero deps — entities.ts, ports.ts
-├── data/jira/            implements IActivityRepository — types.ts, mapper.ts, client.ts, repository.ts
-├── application/          use cases — fetchYesterdayActivity.ts, buildStandupSummary.ts
-├── presentation/         React — components/, hooks/useSourceConfig.ts
+├── domain/               zero deps - entities.ts, ports.ts
+├── data/jira/            implements IActivityRepository - types.ts, mapper.ts, client.ts, repository.ts
+├── application/          use cases - fetchYesterdayActivity.ts, buildStandupSummary.ts
+├── presentation/         React - components/, hooks/useSourceConfig.ts
 └── App.tsx               composition root (only file allowed to import data/)
 ```
 
@@ -47,11 +47,11 @@ interface IActivityRepository {
 
 ## Layer rules
 
-**domain/** — pure TS, no imports from project  
-**data/jira/** — raw Jira types private to folder; mapper does ADF→text; client uses `@tauri-apps/plugin-http` (never `window.fetch`); repository is thin (calls client → mapper → return domain type)  
-**application/** — one exported fn per file; no React/Tauri  
-**presentation/** — components receive domain types + callback props for lazy ops; hooks only in `hooks/`  
-**App.tsx** — instantiate `new JiraActivityRepository()` once at module scope
+**domain/** - pure TS, no imports from project  
+**data/jira/** - raw Jira types private to folder; mapper does ADF→text; client uses `@tauri-apps/plugin-http` (never `window.fetch`); repository is thin (calls client → mapper → return domain type)  
+**application/** - one exported fn per file; no React/Tauri  
+**presentation/** - components receive domain types + callback props for lazy ops; hooks only in `hooks/`  
+**App.tsx** - instantiate `new JiraActivityRepository()` once at module scope
 
 ## Feature cheat-sheet
 

@@ -1,4 +1,4 @@
-// Core domain entities — source-agnostic (no Jira, no Tauri, no React)
+// Core domain entities - source-agnostic (no Jira, no Tauri, no React)
 
 export interface StatusChange {
   id: string;
@@ -29,7 +29,7 @@ export interface Attachment {
   filename: string;
   mimeType: string;
   size: number;
-  contentUrl: string; // raw URL — requires auth to fetch
+  contentUrl: string; // raw URL - requires auth to fetch
   createdAt: string;
   author: { displayName: string };
 }

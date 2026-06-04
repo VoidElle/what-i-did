@@ -1,4 +1,4 @@
-// Raw Jira REST API v3 response shapes — internal to data/jira, not exposed to domain
+// Raw Jira REST API v3 response shapes - internal to data/jira, not exposed to domain
 
 export interface JiraAdfMark {
   type: string;

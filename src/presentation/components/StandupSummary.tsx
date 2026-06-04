@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ClipboardText, Check } from "@phosphor-icons/react";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import type { ActivityIssue } from "../../domain/entities";
 import { buildStandupSummary } from "../../application/buildStandupSummary";
@@ -18,12 +19,15 @@ export function StandupSummary({ issues }: Props) {
 
   return (
     <button
-      className="btn-copy"
+      className={`btn-copy${copied ? " btn-copy--success" : ""}`}
       onClick={handleCopy}
       disabled={issues.length === 0}
       title="Copy standup summary to clipboard"
     >
-      {copied ? "✓ Copied!" : "📋 Copy standup summary"}
+      {copied
+        ? <><Check size={12} weight="bold" /> Copied</>
+        : <><ClipboardText size={12} /> Copy standup</>
+      }
     </button>
   );
 }

@@ -7,9 +7,9 @@ You are an expert on the Jira REST API v3 as used in the **what-i-did** Tauri ap
 
 ## Project API layer
 
-All HTTP calls go through `src/api/jira.ts` using `@tauri-apps/plugin-http` (`fetch` imported from there, not from the browser). Never use `window.fetch` directly — Tauri's fetch is required to bypass CORS and attach the auth header correctly.
+All HTTP calls go through `src/api/jira.ts` using `@tauri-apps/plugin-http` (`fetch` imported from there, not from the browser). Never use `window.fetch` directly - Tauri's fetch is required to bypass CORS and attach the auth header correctly.
 
-Auth is always `Basic base64(email:token)`. Helper `authHeader(email, token)` and `jsonHeaders(email, token)` already exist in `src/api/jira.ts` — reuse them.
+Auth is always `Basic base64(email:token)`. Helper `authHeader(email, token)` and `jsonHeaders(email, token)` already exist in `src/api/jira.ts` - reuse them.
 
 Config shape (`src/types/jira.ts → JiraConfig`):
 ```ts
@@ -30,7 +30,7 @@ Config shape (`src/types/jira.ts → JiraConfig`):
 The active query: `assignee = currentUser() AND updated >= "-1d" ORDER BY updated DESC`
 
 - `-1d` = last 24 hours relative to now (Jira server time). For "yesterday business day" use `updated >= startOfDay(-1) AND updated <= endOfDay(-1)`.
-- `currentUser()` resolves to the authenticated user — no need to hardcode email in JQL.
+- `currentUser()` resolves to the authenticated user - no need to hardcode email in JQL.
 - Fields requested: `summary,description,status,assignee,issuetype,priority,updated,comment,project,attachment`
 - Always include `expand=changelog` in the search URL (already done) to get status-change history without extra per-issue requests.
 
@@ -66,7 +66,7 @@ Fall back to `displayName` only if email is absent (some Jira instances hide ema
 An issue counts as "user acted" if:
 1. Any `changelog.histories` entry has `author.emailAddress === userEmail` AND `created` is within the window.
 2. Any `fields.comment.comments` entry has `author.emailAddress === userEmail` AND `created` or `updated` is within the window.
-3. (Worklogs are lazy-loaded — do not use for initial filtering.)
+3. (Worklogs are lazy-loaded - do not use for initial filtering.)
 
 "Within the window" = `Date.now() - 24 * 60 * 60 * 1000` for last-24h, or compute yesterday's date boundaries for strict calendar-day filtering.
 
@@ -79,11 +79,11 @@ To fetch additional fields, add the field name to the `fields` param in `fetchYe
 ```ts
 if (!res.ok) {
   const body = await res.text().catch(() => "");
-  throw new Error(`Jira API error ${res.status}: ${res.statusText}${body ? ` — ${body.slice(0, 200)}` : ""}`);
+  throw new Error(`Jira API error ${res.status}: ${res.statusText}${body ? ` - ${body.slice(0, 200)}` : ""}`);
 }
 ```
 Non-critical fetches (worklogs, attachments) return empty arrays/null on failure rather than throwing.
 
 ## ADF (Atlassian Document Format)
 
-`extractAdfText` in `src/components/IssueCard.tsx` converts ADF trees to plain text. It handles: paragraph, heading, bulletList, orderedList, listItem, codeBlock, inlineCode, mention, emoji, media, mediaSingle, mediaGroup, inlineCard, blockCard, rule, table. For new node types, add a `case` in the switch — never call `extractAdfText` on a raw string without checking `typeof node === "string"` first.
+`extractAdfText` in `src/components/IssueCard.tsx` converts ADF trees to plain text. It handles: paragraph, heading, bulletList, orderedList, listItem, codeBlock, inlineCode, mention, emoji, media, mediaSingle, mediaGroup, inlineCard, blockCard, rule, table. For new node types, add a `case` in the switch - never call `extractAdfText` on a raw string without checking `typeof node === "string"` first.

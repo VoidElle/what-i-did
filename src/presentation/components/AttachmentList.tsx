@@ -1,11 +1,13 @@
 import { useState } from "react";
+import { FilmStrip, Image, FilePdf, Paperclip, Play, MagnifyingGlass } from "@phosphor-icons/react";
 import type { Attachment } from "../../domain/entities";
 
-function fileIcon(mimeType: string): string {
-  if (mimeType.startsWith("video/")) return "🎬";
-  if (mimeType.startsWith("image/")) return "🖼";
-  if (mimeType.includes("pdf")) return "📄";
-  return "📎";
+function FileIcon({ mimeType }: { mimeType: string }) {
+  const p = { size: 14, weight: "duotone" as const, color: "var(--text-faint)" };
+  if (mimeType.startsWith("video/")) return <FilmStrip {...p} />;
+  if (mimeType.startsWith("image/")) return <Image    {...p} />;
+  if (mimeType.includes("pdf"))      return <FilePdf  {...p} />;
+  return <Paperclip {...p} />;
 }
 
 function formatSize(bytes: number): string {
@@ -44,12 +46,15 @@ function AttachmentItem({ attachment, onFetchUrl }: AttachmentItemProps) {
   return (
     <div className="attachment-item">
       <div className="attachment-meta">
-        <span className="attachment-icon">{fileIcon(attachment.mimeType)}</span>
+        <span className="attachment-icon"><FileIcon mimeType={attachment.mimeType} /></span>
         <span className="attachment-name">{attachment.filename}</span>
         <span className="attachment-size">{formatSize(attachment.size)}</span>
         {(isVideo || isImage) && !blobUrl && !loading && (
           <button className="btn-load-media" onClick={load}>
-            {isVideo ? "▶ Play" : "🔍 View"}
+            {isVideo
+              ? <><Play size={10} weight="fill" /> Play</>
+              : <><MagnifyingGlass size={10} /> View</>
+            }
           </button>
         )}
         {loading && <span className="detail-muted">Loading…</span>}

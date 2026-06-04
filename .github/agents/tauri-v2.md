@@ -58,7 +58,7 @@ When a new plugin is added, its permission identifier (`<plugin>:default` or spe
 
 ## HTTP plugin specifics
 
-Import: `import { fetch } from "@tauri-apps/plugin-http"` — NOT `window.fetch`.  
+Import: `import { fetch } from "@tauri-apps/plugin-http"` - NOT `window.fetch`.  
 This bypasses browser CORS restrictions and lets the app call the Jira API directly.  
 The CSP in `tauri.conf.json` does **not** need to allow external domains for plugin-http calls (they go through Rust). But `img-src` may need adjustment if showing remote images.
 
@@ -78,7 +78,7 @@ Current: `default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' d
 - `'unsafe-inline'` on style-src is needed for inline React styles.
 - `img-src` includes `data:` (base64 images) and `asset:` (Tauri asset protocol).
 - To allow remote images (e.g., Jira user avatars): add the domain to `img-src`, e.g., `https://*.atlassian.net`.
-- JS runs only from `'self'` — no CDN scripts.
+- JS runs only from `'self'` - no CDN scripts.
 
 ## IPC / custom Rust commands
 
@@ -97,5 +97,5 @@ Icons live in `src-tauri/icons/`. Regenerate with `npm run tauri icon <source.pn
 
 - `tsconfig.json` covers frontend; `tsconfig.node.json` covers `vite.config.ts`.
 - Vite config: `src/vite.config.ts` uses `@vitejs/plugin-react`.
-- Path aliases: none currently — use relative imports.
+- Path aliases: none currently - use relative imports.
 - Module type: `"type": "module"` in `package.json`.

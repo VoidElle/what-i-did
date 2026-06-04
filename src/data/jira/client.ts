@@ -32,7 +32,7 @@ export async function getYesterdayIssues(
   if (!res.ok) {
     const body = await res.text().catch(() => "");
     throw new Error(
-      `Jira API error ${res.status}: ${res.statusText}${body ? ` — ${body.slice(0, 200)}` : ""}`
+      `Jira API error ${res.status}: ${res.statusText}${body ? ` - ${body.slice(0, 200)}` : ""}`
     );
   }
 
