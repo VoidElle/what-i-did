@@ -1,5 +1,6 @@
 import { fetch } from "@tauri-apps/plugin-http";
-import type { JiraConfig, JiraIssue, WorklogEntry } from "../types/jira";
+import type { SourceConfig } from "../../domain/entities";
+import type { JiraIssueRaw, JiraWorklogRaw } from "./types";
 
 function authHeader(email: string, token: string): string {
   return "Basic " + btoa(`${email}:${token}`);
@@ -13,9 +14,9 @@ function jsonHeaders(email: string, token: string): Record<string, string> {
   };
 }
 
-export async function fetchYesterdayIssues(
-  config: JiraConfig
-): Promise<JiraIssue[]> {
+export async function getYesterdayIssues(
+  config: SourceConfig
+): Promise<JiraIssueRaw[]> {
   const { baseUrl, email, token } = config;
   const jql =
     'assignee = currentUser() AND updated >= "-1d" ORDER BY updated DESC';
@@ -35,12 +36,30 @@ export async function fetchYesterdayIssues(
     );
   }
 
-  const data = (await res.json()) as { issues?: JiraIssue[] };
+  const data = (await res.json()) as { issues?: JiraIssueRaw[] };
   return data.issues ?? [];
 }
 
-export async function fetchAttachmentBlob(
-  config: JiraConfig,
+export async function getWorklogs(
+  config: SourceConfig,
+  issueKey: string
+): Promise<JiraWorklogRaw[]> {
+  const { baseUrl, email, token } = config;
+  const url = `${baseUrl}/rest/api/3/issue/${issueKey}/worklog`;
+
+  const res = await fetch(url, {
+    method: "GET",
+    headers: jsonHeaders(email, token),
+  });
+
+  if (!res.ok) return [];
+
+  const data = (await res.json()) as { worklogs?: JiraWorklogRaw[] };
+  return data.worklogs ?? [];
+}
+
+export async function getAttachmentBlob(
+  config: SourceConfig,
   contentUrl: string,
   mimeType: string
 ): Promise<string> {
@@ -53,22 +72,4 @@ export async function fetchAttachmentBlob(
   const buffer = await res.arrayBuffer();
   const blob = new Blob([buffer], { type: mimeType });
   return URL.createObjectURL(blob);
-}
-
-export async function fetchWorklog(
-  config: JiraConfig,
-  issueKey: string
-): Promise<WorklogEntry[]> {
-  const { baseUrl, email, token } = config;
-  const url = `${baseUrl}/rest/api/3/issue/${issueKey}/worklog`;
-
-  const res = await fetch(url, {
-    method: "GET",
-    headers: jsonHeaders(email, token),
-  });
-
-  if (!res.ok) return [];
-
-  const data = (await res.json()) as { worklogs?: WorklogEntry[] };
-  return data.worklogs ?? [];
 }

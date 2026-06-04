@@ -1,23 +1,17 @@
 import { useState } from "react";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
-import type { JiraIssue } from "../types/jira";
+import type { ActivityIssue } from "../../domain/entities";
+import { buildStandupSummary } from "../../application/buildStandupSummary";
 
 interface Props {
-  issues: JiraIssue[];
-}
-
-function buildStandup(issues: JiraIssue[]): string {
-  const lines = issues.map(
-    (i) => `- [${i.key}] ${i.fields.summary} → ${i.fields.status.name}`
-  );
-  return `Yesterday:\n${lines.join("\n")}`;
+  issues: ActivityIssue[];
 }
 
 export function StandupSummary({ issues }: Props) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
-    await writeText(buildStandup(issues));
+    await writeText(buildStandupSummary(issues));
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };

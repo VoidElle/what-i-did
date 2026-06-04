@@ -1,12 +1,15 @@
 import { useState } from "react";
-import { useJiraConfig } from "./hooks/useStore";
-import { SettingsScreen } from "./components/Settings";
-import { MainScreen } from "./components/MainScreen";
+import { useSourceConfig } from "./presentation/hooks/useSourceConfig";
+import { SettingsScreen } from "./presentation/components/Settings";
+import { MainScreen } from "./presentation/components/MainScreen";
+import { JiraActivityRepository } from "./data/jira/repository";
 
 type Screen = "main" | "settings";
 
+const repo = new JiraActivityRepository();
+
 function App() {
-  const { config, loading, saveConfig } = useJiraConfig();
+  const { config, loading, saveConfig } = useSourceConfig();
   const [screen, setScreen] = useState<Screen>("main");
 
   if (loading) {
@@ -32,7 +35,11 @@ function App() {
   }
 
   return (
-    <MainScreen config={config} onOpenSettings={() => setScreen("settings")} />
+    <MainScreen
+      config={config}
+      repo={repo}
+      onOpenSettings={() => setScreen("settings")}
+    />
   );
 }
 

@@ -1,6 +1,5 @@
 import { useState } from "react";
-import type { JiraAttachment, JiraConfig } from "../types/jira";
-import { fetchAttachmentBlob } from "../api/jira";
+import type { Attachment } from "../../domain/entities";
 
 function fileIcon(mimeType: string): string {
   if (mimeType.startsWith("video/")) return "🎬";
@@ -16,11 +15,11 @@ function formatSize(bytes: number): string {
 }
 
 interface AttachmentItemProps {
-  attachment: JiraAttachment;
-  config: JiraConfig;
+  attachment: Attachment;
+  onFetchUrl: (contentUrl: string, mimeType: string) => Promise<string>;
 }
 
-function AttachmentItem({ attachment, config }: AttachmentItemProps) {
+function AttachmentItem({ attachment, onFetchUrl }: AttachmentItemProps) {
   const [blobUrl, setBlobUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -33,7 +32,7 @@ function AttachmentItem({ attachment, config }: AttachmentItemProps) {
     setLoading(true);
     setError(null);
     try {
-      const url = await fetchAttachmentBlob(config, attachment.content, attachment.mimeType);
+      const url = await onFetchUrl(attachment.contentUrl, attachment.mimeType);
       setBlobUrl(url);
     } catch (e) {
       setError((e as Error).message);
@@ -67,25 +66,29 @@ function AttachmentItem({ attachment, config }: AttachmentItemProps) {
       )}
 
       {blobUrl && isImage && (
-        <img className="attachment-image" src={blobUrl} alt={attachment.filename} />
+        <img
+          className="attachment-image"
+          src={blobUrl}
+          alt={attachment.filename}
+        />
       )}
     </div>
   );
 }
 
 interface AttachmentListProps {
-  attachments: JiraAttachment[];
-  config: JiraConfig;
+  attachments: Attachment[];
+  onFetchUrl: (contentUrl: string, mimeType: string) => Promise<string>;
 }
 
-export function AttachmentList({ attachments, config }: AttachmentListProps) {
+export function AttachmentList({ attachments, onFetchUrl }: AttachmentListProps) {
   if (!attachments.length) return null;
   return (
     <div className="detail-section">
       <div className="detail-label">Attachments ({attachments.length})</div>
       <div className="attachments-list">
         {attachments.map((a) => (
-          <AttachmentItem key={a.id} attachment={a} config={config} />
+          <AttachmentItem key={a.id} attachment={a} onFetchUrl={onFetchUrl} />
         ))}
       </div>
     </div>

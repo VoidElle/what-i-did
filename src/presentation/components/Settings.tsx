@@ -1,9 +1,9 @@
 import { useState } from "react";
-import type { JiraConfig } from "../types/jira";
+import type { SourceConfig } from "../../domain/entities";
 
 interface SettingsProps {
-  initialConfig: JiraConfig | null;
-  onSave: (config: JiraConfig) => void;
+  initialConfig: SourceConfig | null;
+  onSave: (config: SourceConfig) => void;
   canCancel: boolean;
   onCancel: () => void;
 }

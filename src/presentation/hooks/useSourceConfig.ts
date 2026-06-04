@@ -1,13 +1,13 @@
 import { load } from "@tauri-apps/plugin-store";
 import { useState, useEffect, useCallback } from "react";
-import type { JiraConfig } from "../types/jira";
+import type { SourceConfig } from "../../domain/entities";
 
 async function getStore() {
   return load("settings.json", { defaults: {}, autoSave: true });
 }
 
-export function useJiraConfig() {
-  const [config, setConfig] = useState<JiraConfig | null>(null);
+export function useSourceConfig() {
+  const [config, setConfig] = useState<SourceConfig | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -28,7 +28,7 @@ export function useJiraConfig() {
     };
   }, []);
 
-  const saveConfig = useCallback(async (next: JiraConfig) => {
+  const saveConfig = useCallback(async (next: SourceConfig) => {
     const store = await getStore();
     await store.set("baseUrl", next.baseUrl);
     await store.set("email", next.email);
