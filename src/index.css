@@ -20,7 +20,6 @@
 }
 
 @layer utilities {
-  /* Custom scrollbar — Tailwind v3 has no built-in scrollbar utilities */
   .scrollbar-custom {
     scrollbar-width: thin;
     scrollbar-color: #2e2e36 transparent;
@@ -29,9 +28,17 @@
   .scrollbar-custom::-webkit-scrollbar-thumb { background: #2e2e36; border-radius: 4px; }
   .scrollbar-custom::-webkit-scrollbar-track { background: transparent; }
 
-  /* Shimmer gradient — too complex for Tailwind arbitrary */
   .shimmer-bg {
     background: linear-gradient(90deg, #202026 25%, #26262d 50%, #202026 75%);
     background-size: 800px 100%;
+  }
+}
+
+/* Reduced motion: disable transforms, keep opacity/color transitions */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

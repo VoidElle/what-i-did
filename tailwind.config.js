@@ -32,24 +32,32 @@ export default {
         DEFAULT: "10px",
         lg: "14px",
       },
+      transitionTimingFunction: {
+        // Strong ease-out for UI interactions — starts fast, feels responsive
+        ui:     "cubic-bezier(0.23, 1, 0.32, 1)",
+        // Strong ease-in-out for on-screen movement
+        inout:  "cubic-bezier(0.77, 0, 0.175, 1)",
+      },
       keyframes: {
         shimmer: {
           "0%":   { backgroundPosition: "-400px 0" },
           "100%": { backgroundPosition:  "400px 0" },
         },
+        // Card entry: start from scale(0.98) — nothing appears from nothing
         "card-in": {
-          from: { opacity: "0", transform: "translateY(6px)" },
-          to:   { opacity: "1", transform: "translateY(0)" },
+          from: { opacity: "0", transform: "translateY(8px) scale(0.98)" },
+          to:   { opacity: "1", transform: "translateY(0) scale(1)" },
         },
-        "details-in": {
-          from: { opacity: "0" },
-          to:   { opacity: "1" },
+        // Small fade-up for content swaps (e.g. copy button state transition)
+        "fade-up": {
+          from: { opacity: "0", transform: "translateY(3px)" },
+          to:   { opacity: "1", transform: "translateY(0)" },
         },
       },
       animation: {
-        shimmer:    "shimmer 1.6s infinite",
-        "card-in":  "card-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) both",
-        "details-in": "details-in 0.2s ease",
+        shimmer:  "shimmer 1.6s linear infinite",
+        "card-in": "card-in 280ms cubic-bezier(0.23, 1, 0.32, 1) both",
+        "fade-up": "fade-up 150ms cubic-bezier(0.23, 1, 0.32, 1)",
       },
       width: { sidebar: "224px" },
       minWidth: { sidebar: "224px" },
