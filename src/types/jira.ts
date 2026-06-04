@@ -29,11 +29,12 @@ export interface JiraIssue {
     };
     project: { key: string; name: string };
   };
+  changelog?: Changelog;
 }
 
 export interface JiraComment {
   id: string;
-  author: { displayName: string };
+  author: { displayName: string; emailAddress?: string };
   // Atlassian Document Format body
   body: AdfNode | string | null;
   created: string;
@@ -59,6 +60,26 @@ export interface WorklogEntry {
   comment?: AdfNode | string | null;
   timeSpent: string;
   started: string;
+}
+
+export interface ChangelogItem {
+  field: string;
+  fieldtype: string;
+  from: string | null;
+  fromString: string | null;
+  to: string | null;
+  toString: string | null;
+}
+
+export interface ChangelogHistory {
+  id: string;
+  author: { displayName: string; emailAddress?: string };
+  created: string;
+  items: ChangelogItem[];
+}
+
+export interface Changelog {
+  histories: ChangelogHistory[];
 }
 
 export interface JiraConfig {

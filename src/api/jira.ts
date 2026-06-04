@@ -21,7 +21,7 @@ export async function fetchYesterdayIssues(
     'assignee = currentUser() AND updated >= "-1d" ORDER BY updated DESC';
   const fields =
     "summary,description,status,assignee,issuetype,priority,updated,comment,project,attachment";
-  const url = `${baseUrl}/rest/api/3/search/jql?jql=${encodeURIComponent(jql)}&fields=${encodeURIComponent(fields)}&maxResults=50`;
+  const url = `${baseUrl}/rest/api/3/search/jql?jql=${encodeURIComponent(jql)}&fields=${encodeURIComponent(fields)}&expand=changelog&maxResults=50`;
 
   const res = await fetch(url, {
     method: "GET",

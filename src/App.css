@@ -499,3 +499,37 @@ button { cursor: pointer; border: none; font-family: inherit; font-size: 13px; }
   gap: 10px;
   margin-top: 24px;
 }
+
+/* ── Status changes ── */
+.meta-chip.status-changed {
+  color: #e8a838;
+  border-color: #e8a83844;
+  background: #2a2410;
+}
+
+.status-changes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.status-change-entry {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  flex-wrap: wrap;
+}
+
+.status-change-arrow {
+  font-weight: 500;
+}
+
+.status-change-from {
+  color: var(--text-muted);
+}
+
+.status-change-to {
+  color: var(--text-primary, #e2e4f0);
+  font-weight: 600;
+}

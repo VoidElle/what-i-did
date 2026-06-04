@@ -19,6 +19,26 @@ function groupByProject(issues: JiraIssue[]): Map<string, JiraIssue[]> {
   return map;
 }
 
+function userActedYesterday(issue: JiraIssue, email: string): boolean {
+  const cutoff = Date.now() - 24 * 60 * 60 * 1000;
+  const userEmail = email.toLowerCase();
+
+  const matchAuthor = (a: { displayName: string; emailAddress?: string }) =>
+    a.emailAddress ? a.emailAddress.toLowerCase() === userEmail : false;
+
+  const inWindow = (iso: string) => new Date(iso).getTime() >= cutoff;
+
+  const hasComment = issue.fields.comment?.comments.some(
+    (c) => matchAuthor(c.author) && (inWindow(c.created) || inWindow(c.updated))
+  );
+  if (hasComment) return true;
+
+  const hasChangelog = issue.changelog?.histories.some(
+    (h) => matchAuthor(h.author) && inWindow(h.created)
+  );
+  return !!hasChangelog;
+}
+
 export function MainScreen({ config, onOpenSettings }: Props) {
   const [issues, setIssues] = useState<JiraIssue[]>([]);
   const [loading, setLoading] = useState(true);
@@ -30,7 +50,7 @@ export function MainScreen({ config, onOpenSettings }: Props) {
     setError(null);
     fetchYesterdayIssues(config)
       .then((data) => {
-        if (!cancelled) setIssues(data);
+        if (!cancelled) setIssues(data.filter((i) => userActedYesterday(i, config.email)));
       })
       .catch((e: Error) => {
         if (!cancelled) setError(e.message);
@@ -79,7 +99,7 @@ export function MainScreen({ config, onOpenSettings }: Props) {
                 setLoading(true);
                 setError(null);
                 fetchYesterdayIssues(config)
-                  .then(setIssues)
+                  .then((data) => setIssues(data.filter((i) => userActedYesterday(i, config.email))))
                   .catch((e: Error) => setError(e.message))
                   .finally(() => setLoading(false));
               }}

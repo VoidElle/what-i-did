@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { AdfNode, JiraConfig, JiraIssue, WorklogEntry } from "../types/jira";
+import type { AdfNode, ChangelogHistory, JiraConfig, JiraIssue, WorklogEntry } from "../types/jira";
 import { fetchWorklog } from "../api/jira";
 import { AttachmentList } from "./AttachmentList";
 
@@ -74,6 +74,15 @@ export function extractAdfText(node: AdfNode | string | null | undefined): strin
   }
 }
 
+function getYesterdayStatusChanges(histories: ChangelogHistory[] | undefined): ChangelogHistory[] {
+  const cutoff = Date.now() - 24 * 60 * 60 * 1000;
+  return (histories ?? []).filter(
+    (h) =>
+      new Date(h.created).getTime() >= cutoff &&
+      h.items.some((i) => i.field === "status")
+  );
+}
+
 const STATUS_COLOR: Record<string, string> = {
   "blue-grey": "#5e6c84",
   yellow: "#ff991f",
@@ -104,6 +113,7 @@ export function IssueCard({ issue, config }: IssueCardProps) {
   const typeEmoji = TYPE_EMOJI[fields.issuetype.name] ?? "📌";
   const comments = fields.comment?.comments ?? [];
   const description = extractAdfText(fields.description);
+  const statusChanges = getYesterdayStatusChanges(issue.changelog?.histories);
 
   const toggle = async () => {
     const next = !expanded;
@@ -143,6 +153,9 @@ export function IssueCard({ issue, config }: IssueCardProps) {
         {comments.length > 0 && (
           <span className="meta-chip muted">💬 {comments.length}</span>
         )}
+        {statusChanges.length > 0 && (
+          <span className="meta-chip status-changed" title="Status changed yesterday">🔄 Status changed</span>
+        )}
       </div>
 
       {/* ── Expanded details ── */}
@@ -153,6 +166,32 @@ export function IssueCard({ issue, config }: IssueCardProps) {
             <div className="detail-section">
               <div className="detail-label">Description</div>
               <div className="detail-body">{description}</div>
+            </div>
+          )}
+
+          {/* Status changes */}
+          {statusChanges.length > 0 && (
+            <div className="detail-section">
+              <div className="detail-label">Yesterday's Status Changes</div>
+              <div className="status-changes-list">
+                {statusChanges.map((h) =>
+                  h.items
+                    .filter((i) => i.field === "status")
+                    .map((item, idx) => (
+                      <div key={`${h.id}-${idx}`} className="status-change-entry">
+                        <span className="status-change-arrow">
+                          <span className="status-change-from">{item.fromString ?? "—"}</span>
+                          {" → "}
+                          <span className="status-change-to">{item.toString ?? "—"}</span>
+                        </span>
+                        <span className="comment-date">
+                          {new Date(h.created).toLocaleString()}
+                        </span>
+                        <span className="meta-chip muted">{h.author.displayName}</span>
+                      </div>
+                    ))
+                )}
+              </div>
             </div>
           )}
 
