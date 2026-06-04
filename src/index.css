@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body, #root {
+    height: 100%;
+    background-color: #0d0d10;
+    color: #f0f0f4;
+    font-family: 'Geist Variable', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  button {
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+  }
+}
+
+@layer utilities {
+  /* Custom scrollbar — Tailwind v3 has no built-in scrollbar utilities */
+  .scrollbar-custom {
+    scrollbar-width: thin;
+    scrollbar-color: #2e2e36 transparent;
+  }
+  .scrollbar-custom::-webkit-scrollbar { width: 4px; }
+  .scrollbar-custom::-webkit-scrollbar-thumb { background: #2e2e36; border-radius: 4px; }
+  .scrollbar-custom::-webkit-scrollbar-track { background: transparent; }
+
+  /* Shimmer gradient — too complex for Tailwind arbitrary */
+  .shimmer-bg {
+    background: linear-gradient(90deg, #202026 25%, #26262d 50%, #202026 75%);
+    background-size: 800px 100%;
+  }
+}

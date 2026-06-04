@@ -3,7 +3,7 @@ import { FilmStrip, Image, FilePdf, Paperclip, Play, MagnifyingGlass } from "@ph
 import type { Attachment } from "../../domain/entities";
 
 function FileIcon({ mimeType }: { mimeType: string }) {
-  const p = { size: 14, weight: "duotone" as const, color: "var(--text-faint)" };
+  const p = { size: 14, weight: "duotone" as const, className: "text-ink-faint" };
   if (mimeType.startsWith("video/")) return <FilmStrip {...p} />;
   if (mimeType.startsWith("image/")) return <Image    {...p} />;
   if (mimeType.includes("pdf"))      return <FilePdf  {...p} />;
@@ -44,26 +44,35 @@ function AttachmentItem({ attachment, onFetchUrl }: AttachmentItemProps) {
   };
 
   return (
-    <div className="attachment-item">
-      <div className="attachment-meta">
-        <span className="attachment-icon"><FileIcon mimeType={attachment.mimeType} /></span>
-        <span className="attachment-name">{attachment.filename}</span>
-        <span className="attachment-size">{formatSize(attachment.size)}</span>
+    <div className="bg-surface-2 border border-bdr-subtle rounded-sm overflow-hidden">
+      <div className="flex items-center gap-2 px-2.5 py-2">
+        <span className="flex-shrink-0 flex items-center text-ink-faint">
+          <FileIcon mimeType={attachment.mimeType} />
+        </span>
+        <span className="flex-1 text-xs text-ink font-medium overflow-hidden text-ellipsis whitespace-nowrap">
+          {attachment.filename}
+        </span>
+        <span className="text-[10px] text-ink-faint font-mono flex-shrink-0">
+          {formatSize(attachment.size)}
+        </span>
         {(isVideo || isImage) && !blobUrl && !loading && (
-          <button className="btn-load-media" onClick={load}>
+          <button
+            className="flex items-center gap-1 bg-transparent text-accent border border-accent-border px-[9px] py-[2px] rounded text-[11px] font-medium font-sans cursor-pointer flex-shrink-0 transition-colors duration-150 hover:bg-accent-dim"
+            onClick={load}
+          >
             {isVideo
               ? <><Play size={10} weight="fill" /> Play</>
               : <><MagnifyingGlass size={10} /> View</>
             }
           </button>
         )}
-        {loading && <span className="detail-muted">Loading…</span>}
-        {error && <span className="attachment-error">⚠️ {error}</span>}
+        {loading && <span className="text-xs text-ink-faint">Loading...</span>}
+        {error && <span className="text-[11px] text-danger-text">{error}</span>}
       </div>
 
       {blobUrl && isVideo && (
         <video
-          className="attachment-video"
+          className="block w-full max-h-80 bg-black"
           src={blobUrl}
           controls
           autoPlay={false}
@@ -72,7 +81,7 @@ function AttachmentItem({ attachment, onFetchUrl }: AttachmentItemProps) {
 
       {blobUrl && isImage && (
         <img
-          className="attachment-image"
+          className="block w-full max-h-[360px] object-contain bg-bg"
           src={blobUrl}
           alt={attachment.filename}
         />
@@ -89,9 +98,11 @@ interface AttachmentListProps {
 export function AttachmentList({ attachments, onFetchUrl }: AttachmentListProps) {
   if (!attachments.length) return null;
   return (
-    <div className="detail-section">
-      <div className="detail-label">Attachments ({attachments.length})</div>
-      <div className="attachments-list">
+    <div>
+      <div className="text-[9px] font-bold uppercase tracking-[0.8px] text-ink-muted mb-2 font-mono">
+        Attachments ({attachments.length})
+      </div>
+      <div className="flex flex-col gap-1.5">
         {attachments.map((a) => (
           <AttachmentItem key={a.id} attachment={a} onFetchUrl={onFetchUrl} />
         ))}
