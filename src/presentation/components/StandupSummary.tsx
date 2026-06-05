@@ -24,14 +24,14 @@ export function StandupSummary({ issues, windowStart, windowEnd }: Props) {
       className="group flex items-center justify-center gap-2 px-3 py-[8px] rounded-lg w-full font-medium text-xs relative overflow-hidden disabled:opacity-30 disabled:cursor-not-allowed"
       style={{
         background: copied
-          ? "rgba(52,211,153,0.12)"
+          ? "rgba(var(--accent-rgb), 0.12)"
           : "rgba(255,255,255,0.04)",
         border: copied
-          ? "1px solid rgba(52,211,153,0.25)"
+          ? "1px solid rgba(var(--accent-rgb), 0.25)"
           : "1px solid rgba(255,255,255,0.08)",
-        color: copied ? "#34d399" : "#9898a8",
+        color: copied ? "var(--accent)" : "#9898a8",
         transition: "all 250ms cubic-bezier(0.16,1,0.3,1)",
-        boxShadow: copied ? "0 0 16px rgba(52,211,153,0.08)" : "none",
+        boxShadow: copied ? "0 0 16px rgba(var(--accent-rgb), 0.08)" : "none",
       }}
       onMouseEnter={e => {
         if (!copied) {
@@ -51,13 +51,13 @@ export function StandupSummary({ issues, windowStart, windowEnd }: Props) {
       onMouseUp={e => (e.currentTarget.style.transform = "scale(1)")}
       onClick={handleCopy}
       disabled={issues.length === 0}
-      title="Copy standup summary to clipboard"
+      title="Copy standup recap summary to clipboard"
     >
       <span key={copied ? "copied" : "copy"} className="flex items-center gap-1.5 animate-fade-up">
         {/* Nested icon circle — button-in-button */}
         <span className="w-4 h-4 rounded flex items-center justify-center flex-shrink-0"
           style={{
-            background: copied ? "rgba(52,211,153,0.15)" : "rgba(255,255,255,0.07)",
+            background: copied ? "rgba(var(--accent-rgb), 0.15)" : "rgba(255,255,255,0.07)",
             transition: "background 250ms cubic-bezier(0.16,1,0.3,1)",
           }}>
           {copied
@@ -65,7 +65,7 @@ export function StandupSummary({ issues, windowStart, windowEnd }: Props) {
             : <ClipboardText size={10} />
           }
         </span>
-        {copied ? "Copied" : "Copy standup"}
+        {copied ? "Copied" : "Copy standup recap"}
       </span>
     </button>
   );

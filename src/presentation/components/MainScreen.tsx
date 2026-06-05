@@ -109,8 +109,8 @@ export function MainScreen({ config, repo, onOpenSettings }: Props) {
 
         {/* Brand */}
         <div className="flex items-center gap-2.5 px-4 pt-5 pb-4" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-          <div className="w-7 h-7 flex items-center justify-center flex-shrink-0 text-accent relative"
-            style={{ background: "rgba(52,211,153,0.08)", border: "1px solid rgba(52,211,153,0.2)", borderRadius: "8px", boxShadow: "0 0 12px rgba(52,211,153,0.08)" }}>
+          <div className="w-7 h-7 flex items-center justify-center flex-shrink-0 relative"
+            style={{ color: "var(--accent)", background: "rgba(var(--accent-rgb), 0.08)", border: "1px solid rgba(var(--accent-rgb), 0.2)", borderRadius: "8px", boxShadow: "0 0 12px rgba(var(--accent-rgb), 0.08)" }}>
             <BrandIcon size={15} />
           </div>
           <span className="text-[13px] font-semibold text-ink tracking-[-0.3px]">What I Did</span>
@@ -153,7 +153,7 @@ export function MainScreen({ config, repo, onOpenSettings }: Props) {
               <div className="flex items-center gap-1.5">
                 <div className="w-[3px] h-[3px] rounded-full flex-shrink-0"
                   style={{
-                    background: isActive ? "#34d399" : "rgba(255,255,255,0.15)",
+                    background: isActive ? "var(--accent)" : "rgba(255,255,255,0.15)",
                     transition: "background 200ms cubic-bezier(0.16,1,0.3,1)",
                   }} />
                 <span className="font-mono text-[11px] tracking-[-0.2px]">{proj}</span>

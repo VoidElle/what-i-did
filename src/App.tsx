@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSourceConfig } from "./presentation/hooks/useSourceConfig";
 import { SettingsScreen } from "./presentation/components/Settings";
 import { MainScreen } from "./presentation/components/MainScreen";
@@ -11,6 +11,10 @@ const repo = new JiraActivityRepository();
 function App() {
   const { config, loading, saveConfig } = useSourceConfig();
   const [screen, setScreen] = useState<Screen>("main");
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", config?.theme ?? "emerald");
+  }, [config?.theme]);
 
   if (loading) {
     return (

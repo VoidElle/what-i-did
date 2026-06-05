@@ -2,6 +2,50 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Accent theme tokens ──────────────────────────────────────────────── */
+:root {
+  --accent: #34d399;
+  --accent-rgb: 52, 211, 153;
+  --accent-dim: rgba(52, 211, 153, 0.08);
+  --accent-border: rgba(52, 211, 153, 0.18);
+  --accent-glow: rgba(52, 211, 153, 0.12);
+}
+html[data-theme="emerald"] {
+  --accent: #34d399;
+  --accent-rgb: 52, 211, 153;
+  --accent-dim: rgba(52, 211, 153, 0.08);
+  --accent-border: rgba(52, 211, 153, 0.18);
+  --accent-glow: rgba(52, 211, 153, 0.12);
+}
+html[data-theme="indigo"] {
+  --accent: #818cf8;
+  --accent-rgb: 129, 140, 248;
+  --accent-dim: rgba(129, 140, 248, 0.08);
+  --accent-border: rgba(129, 140, 248, 0.18);
+  --accent-glow: rgba(129, 140, 248, 0.12);
+}
+html[data-theme="rose"] {
+  --accent: #fb7185;
+  --accent-rgb: 251, 113, 133;
+  --accent-dim: rgba(251, 113, 133, 0.08);
+  --accent-border: rgba(251, 113, 133, 0.18);
+  --accent-glow: rgba(251, 113, 133, 0.12);
+}
+html[data-theme="sky"] {
+  --accent: #38bdf8;
+  --accent-rgb: 56, 189, 248;
+  --accent-dim: rgba(56, 189, 248, 0.08);
+  --accent-border: rgba(56, 189, 248, 0.18);
+  --accent-glow: rgba(56, 189, 248, 0.12);
+}
+html[data-theme="violet"] {
+  --accent: #a78bfa;
+  --accent-rgb: 167, 139, 250;
+  --accent-dim: rgba(167, 139, 250, 0.08);
+  --accent-border: rgba(167, 139, 250, 0.18);
+  --accent-glow: rgba(167, 139, 250, 0.12);
+}
+
 @layer base {
   html, body, #root {
     height: 100%;
@@ -38,7 +82,7 @@
     background-size: 800px 100%;
   }
 
-  /* ── Ambient emerald orb behind main content ───────────────────────── */
+  /* ── Ambient orb behind main content ───────────────────────────────── */
   .ambient-orb::before {
     content: '';
     position: fixed;
@@ -47,7 +91,7 @@
     width: 520px;
     height: 520px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(52,211,153,0.055) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(var(--accent-rgb), 0.055) 0%, transparent 70%);
     pointer-events: none;
     z-index: 0;
     will-change: transform;

@@ -37,7 +37,7 @@ function IssueTypeIcon({ typeName }: { typeName: string }) {
   switch (typeName) {
     case "Bug":     return <Bug               {...p} color="#f87171" />;
     case "Story":   return <BookOpen          {...p} color="#60a5fa" />;
-    case "Task":    return <CheckSquare       {...p} color="#34d399" />;
+    case "Task":    return <CheckSquare       {...p} color="var(--accent)" />;
     case "Epic":    return <Lightning         {...p} color="#f59e0b" />;
     case "Subtask": return <ArrowBendDownRight {...p} color="#94a3b8" />;
     default:        return <PushPin           {...p} color="#6b7280" />;

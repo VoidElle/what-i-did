@@ -20,6 +20,7 @@ export function SettingsScreen({
   const [email, setEmail] = useState(initialConfig?.email ?? "");
   const [token, setToken] = useState(initialConfig?.token ?? "");
   const [devMode, setDevMode] = useState(initialConfig?.devMode ?? false);
+  const [theme, setTheme] = useState(initialConfig?.theme ?? "emerald");
   const [error, setError] = useState("");
 
   const handleSave = () => {
@@ -33,6 +34,7 @@ export function SettingsScreen({
       email: email.trim(),
       token: token.trim(),
       devMode,
+      theme,
     });
   };
 
@@ -41,7 +43,8 @@ export function SettingsScreen({
       {/* Left panel */}
       <div className="w-[280px] flex-shrink-0 bg-surface border-r border-bdr-subtle px-9 py-10 flex flex-col">
         <div className="flex items-center gap-2.5 mb-7">
-          <div className="w-8 h-8 bg-accent-dim border border-accent-border rounded-[9px] flex items-center justify-center text-accent">
+          <div className="w-8 h-8 rounded-[9px] flex items-center justify-center flex-shrink-0"
+            style={{ background: "var(--accent-dim)", border: "1px solid var(--accent-border)", color: "var(--accent)" }}>
             <BrandIcon size={16} />
           </div>
           <span className="text-[15px] font-semibold text-ink tracking-[-0.3px]">What I Did</span>
@@ -91,7 +94,7 @@ export function SettingsScreen({
                 placeholder={placeholder}
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
-                className="w-full bg-surface border border-bdr rounded-sm px-3 py-[9px] text-ink text-[13px] font-sans outline-none transition-[border-color,box-shadow] duration-[180ms] focus:border-accent-border focus:shadow-[0_0_0_3px_rgba(52,211,153,0.09)] placeholder:text-ink-faint"
+                className="w-full bg-surface border border-bdr rounded-sm px-3 py-[9px] text-ink text-[13px] font-sans outline-none transition-[border-color,box-shadow] duration-[180ms] focus:border-accent-border focus:shadow-[0_0_0_3px_var(--accent-glow)] placeholder:text-ink-faint"
               />
               {hint && (
                 <small className="block mt-1 text-[11px] text-ink-faint leading-[1.5]">{hint}</small>
@@ -106,6 +109,39 @@ export function SettingsScreen({
             </div>
           )}
 
+          {/* Theme */}
+          <div className="mt-8 pt-4" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+            <p className="text-[11px] text-ink-faint mb-3">Accent color</p>
+            <div className="flex gap-2.5">
+              {[
+                { id: "emerald", color: "#34d399" },
+                { id: "indigo",  color: "#818cf8" },
+                { id: "rose",    color: "#fb7185" },
+                { id: "sky",     color: "#38bdf8" },
+                { id: "violet",  color: "#a78bfa" },
+              ].map(({ id, color }) => (
+                <button
+                  key={id}
+                  type="button"
+                  onClick={() => {
+                    setTheme(id);
+                    document.documentElement.setAttribute("data-theme", id);
+                  }}
+                  style={{
+                    width: 20,
+                    height: 20,
+                    borderRadius: "50%",
+                    background: color,
+                    outline: theme === id ? `2px solid ${color}` : "none",
+                    outlineOffset: 2,
+                    transition: "outline 150ms cubic-bezier(0.16,1,0.3,1)",
+                    flexShrink: 0,
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+
           {/* Mock mode */}
           <div className="mt-8 pt-4" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
             <button
@@ -117,7 +153,7 @@ export function SettingsScreen({
               <div
                 className="relative flex-shrink-0 w-7 h-4 rounded-full ml-4"
                 style={{
-                  background: devMode ? "rgba(52,211,153,0.7)" : "rgba(255,255,255,0.08)",
+                  background: devMode ? "rgba(var(--accent-rgb), 0.7)" : "rgba(255,255,255,0.08)",
                   transition: "background 200ms cubic-bezier(0.16,1,0.3,1)",
                 }}
               >
@@ -138,7 +174,8 @@ export function SettingsScreen({
 
           <div className="flex gap-2 mt-6">
             <button
-              className="bg-accent text-[#0d1410] px-[18px] py-2 rounded-sm font-semibold text-[13px] transition-[opacity,transform] duration-150 ease-ui hover:opacity-[0.88] active:scale-[0.97]"
+              className="text-[#0d1410] px-[18px] py-2 rounded-sm font-semibold text-[13px] transition-[opacity,transform] duration-150 ease-ui hover:opacity-[0.88] active:scale-[0.97]"
+              style={{ background: "var(--accent)" }}
               onClick={handleSave}
             >
               Save

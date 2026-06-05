@@ -63,4 +63,5 @@ export interface SourceConfig {
   email: string;
   token: string;
   devMode?: boolean;
+  theme?: string;
 }

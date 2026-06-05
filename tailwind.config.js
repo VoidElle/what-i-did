@@ -12,10 +12,10 @@ export default {
         bdr:      { DEFAULT: "#2a2a34", subtle: "#1e1e26" },
         ink:      { DEFAULT: "#ededf2", muted: "#9898a8", faint: "#5e5e72" },
         accent:   {
-          DEFAULT: "#34d399",
-          dim:     "rgba(52,211,153,0.08)",
-          border:  "rgba(52,211,153,0.18)",
-          glow:    "rgba(52,211,153,0.12)",
+          DEFAULT: "var(--accent)",
+          dim:     "var(--accent-dim)",
+          border:  "var(--accent-border)",
+          glow:    "var(--accent-glow)",
         },
         warn:     { DEFAULT: "#fbbf24", dim: "rgba(251,191,36,0.10)", border: "rgba(245,158,11,0.2)" },
         danger:   {
@@ -46,7 +46,7 @@ export default {
       },
       boxShadow: {
         // Ambient OLED glow: no hard edges, pure atmosphere
-        "glow-accent": "0 0 0 1px rgba(52,211,153,0.16), 0 0 24px rgba(52,211,153,0.06)",
+        "glow-accent": "0 0 0 1px rgba(var(--accent-rgb), 0.16), 0 0 24px rgba(var(--accent-rgb), 0.06)",
         "card":        "0 1px 0 rgba(255,255,255,0.03) inset, 0 -1px 0 rgba(0,0,0,0.4) inset",
         "card-hover":  "0 1px 0 rgba(255,255,255,0.05) inset, 0 -1px 0 rgba(0,0,0,0.4) inset, 0 4px 24px rgba(0,0,0,0.3)",
         "inset-top":   "inset 0 1px 0 rgba(255,255,255,0.06)",
