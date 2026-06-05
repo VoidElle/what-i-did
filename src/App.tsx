@@ -4,6 +4,7 @@ import { SettingsScreen } from "./presentation/components/Settings";
 import { CustomizationScreen } from "./presentation/components/CustomizationScreen";
 import { MainScreen } from "./presentation/components/MainScreen";
 import { JiraActivityRepository } from "./data/jira/repository";
+import i18n from "./i18n";
 
 type Screen = "main" | "settings" | "customization";
 
@@ -16,6 +17,10 @@ function App() {
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", config?.theme ?? "emerald");
   }, [config?.theme]);
+
+  useEffect(() => {
+    i18n.changeLanguage(config?.language ?? "en");
+  }, [config?.language]);
 
   if (loading) {
     return (

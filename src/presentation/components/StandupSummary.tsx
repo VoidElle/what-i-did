@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ClipboardText, Check } from "@phosphor-icons/react";
+import { useTranslation } from "react-i18next";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import type { ActivityIssue } from "../../domain/entities";
 import { buildStandupSummary } from "../../application/buildStandupSummary";
@@ -11,6 +12,7 @@ interface Props {
 }
 
 export function StandupSummary({ issues, windowStart, windowEnd }: Props) {
+  const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -51,10 +53,9 @@ export function StandupSummary({ issues, windowStart, windowEnd }: Props) {
       onMouseUp={e => (e.currentTarget.style.transform = "scale(1)")}
       onClick={handleCopy}
       disabled={issues.length === 0}
-      title="Copy standup recap summary to clipboard"
+      title={t("copyTitle")}
     >
       <span key={copied ? "copied" : "copy"} className="flex items-center gap-1.5 animate-fade-up">
-        {/* Nested icon circle — button-in-button */}
         <span className="w-4 h-4 rounded flex items-center justify-center flex-shrink-0"
           style={{
             background: copied ? "rgba(var(--accent-rgb), 0.15)" : "rgba(255,255,255,0.07)",
@@ -65,7 +66,7 @@ export function StandupSummary({ issues, windowStart, windowEnd }: Props) {
             : <ClipboardText size={10} />
           }
         </span>
-        {copied ? "Copied" : "Copy standup recap"}
+        {copied ? t("copied") : t("copyStandup")}
       </span>
     </button>
   );

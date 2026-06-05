@@ -40,9 +40,10 @@ export function useSourceConfig() {
       const connections = await store.get<JiraConnection[]>("connections") ?? [];
       const devMode = await store.get<boolean>("devMode") ?? false;
       const theme   = await store.get<string>("theme") ?? "emerald";
+      const language = await store.get<"en" | "it">("language") ?? "en";
 
       if (!cancelled) {
-        setConfig({ connections, devMode, theme });
+        setConfig({ connections, devMode, theme, language });
         setLoading(false);
       }
     });
@@ -54,6 +55,7 @@ export function useSourceConfig() {
     await store.set("connections", next.connections);
     await store.set("devMode", next.devMode ?? false);
     await store.set("theme", next.theme ?? "emerald");
+    await store.set("language", next.language ?? "en");
     setConfig(next);
   }, []);
 

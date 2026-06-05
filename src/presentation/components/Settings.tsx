@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Plus, Trash, Warning, ArrowLeft } from "@phosphor-icons/react";
+import { useTranslation } from "react-i18next";
 import type { JiraConnection, SourceConfig } from "../../domain/entities";
 import { BrandIcon } from "./BrandIcon";
 
@@ -31,11 +32,12 @@ function ConnectionForm({
   canCancel: boolean;
   isNew: boolean;
 }) {
+  const { t } = useTranslation();
   const [error, setError] = useState("");
 
   const handleSave = () => {
     if (!value.name.trim() || !value.baseUrl.trim() || !value.email.trim() || !value.token.trim()) {
-      setError("All fields are required.");
+      setError(t("validationAllRequired"));
       return;
     }
     setError("");
@@ -43,11 +45,11 @@ function ConnectionForm({
   };
 
   const fields = [
-    { id: "name",    label: "Connection name", type: "text",     placeholder: "Work, Client, Personal...", key: "name"    as const },
-    { id: "baseUrl", label: "Jira Base URL",   type: "url",      placeholder: "https://mycompany.atlassian.net", key: "baseUrl" as const },
-    { id: "email",   label: "Email",            type: "email",    placeholder: "you@company.com",          key: "email"   as const },
-    { id: "token",   label: "API Token",        type: "password", placeholder: "Your Jira API token",      key: "token"   as const,
-      hint: "Generate at: Profile - Security - Create API Token" },
+    { id: "name",    label: t("fieldNameLabel"),    type: "text",     placeholder: t("fieldNamePlaceholder"),    key: "name"    as const },
+    { id: "baseUrl", label: t("fieldBaseUrlLabel"), type: "url",      placeholder: t("fieldBaseUrlPlaceholder"), key: "baseUrl" as const },
+    { id: "email",   label: t("fieldEmailLabel"),   type: "email",    placeholder: t("fieldEmailPlaceholder"),   key: "email"   as const },
+    { id: "token",   label: t("fieldTokenLabel"),   type: "password", placeholder: t("fieldTokenPlaceholder"),   key: "token"   as const,
+      hint: t("fieldTokenHint") },
   ];
 
   return (
@@ -82,7 +84,7 @@ function ConnectionForm({
           style={{ background: "var(--accent)" }}
           onClick={handleSave}
         >
-          {isNew ? "Add" : "Save"}
+          {isNew ? t("add") : t("save")}
         </button>
         {canCancel && (
           <button
@@ -90,7 +92,7 @@ function ConnectionForm({
             style={{ border: "1px solid rgba(255,255,255,0.22)" }}
             onClick={onCancel}
           >
-            Cancel
+            {t("cancel")}
           </button>
         )}
         {canDelete && onDelete && (
@@ -99,7 +101,7 @@ function ConnectionForm({
             onClick={onDelete}
           >
             <Trash size={12} />
-            Remove
+            {t("remove")}
           </button>
         )}
       </div>
@@ -108,6 +110,7 @@ function ConnectionForm({
 }
 
 export function SettingsScreen({ initialConfig, onSave, canCancel, onCancel }: SettingsProps) {
+  const { t } = useTranslation();
   const existing = initialConfig?.connections ?? [];
 
   const [connections, setConnections] = useState<JiraConnection[]>(existing);
@@ -183,10 +186,10 @@ export function SettingsScreen({ initialConfig, onSave, canCancel, onCancel }: S
               style={{ background: "var(--accent-dim)", border: "1px solid var(--accent-border)", color: "var(--accent)" }}>
               <BrandIcon size={14} />
             </div>
-            <span className="text-[14px] font-semibold text-ink tracking-[-0.3px]">What I Did</span>
+            <span className="text-[14px] font-semibold text-ink tracking-[-0.3px]">{t("appName")}</span>
           </div>
           <p className="text-[11px] text-ink-faint mt-3 leading-[1.6]">
-            Your credentials are stored locally and never leave this device.
+            {t("settingsTagline")}
           </p>
         </div>
 
@@ -207,7 +210,7 @@ export function SettingsScreen({ initialConfig, onSave, canCancel, onCancel }: S
             </button>
           ))}
           {connections.length === 0 && (
-            <p className="px-4 py-3 text-[11px] text-ink-faint">No connections yet.</p>
+            <p className="px-4 py-3 text-[11px] text-ink-faint">{t("noConnections")}</p>
           )}
         </div>
 
@@ -219,7 +222,7 @@ export function SettingsScreen({ initialConfig, onSave, canCancel, onCancel }: S
             onClick={() => selectConnection("new")}
           >
             <Plus size={11} weight="bold" />
-            Add connection
+            {t("addConnection")}
           </button>
         </div>
 
@@ -231,7 +234,7 @@ export function SettingsScreen({ initialConfig, onSave, canCancel, onCancel }: S
               onClick={onCancel}
             >
               <ArrowLeft size={13} weight="bold" className="transition-transform duration-200 group-hover:-translate-x-0.5" />
-              Back
+              {t("back")}
             </button>
           </div>
         )}
@@ -241,9 +244,9 @@ export function SettingsScreen({ initialConfig, onSave, canCancel, onCancel }: S
       <div className="flex-1 overflow-y-auto px-10 py-10 flex flex-col">
         <div className="mb-7">
           <h1 className="text-xl font-semibold text-ink tracking-[-0.4px] mb-1">
-            {selectedId === "new" ? "New connection" : (connections.find(c => c.id === selectedId)?.name ?? "Connection")}
+            {selectedId === "new" ? t("newConnection") : (connections.find(c => c.id === selectedId)?.name ?? t("newConnection"))}
           </h1>
-          <p className="text-[13px] text-ink-muted">Jira Cloud credentials for this workspace.</p>
+          <p className="text-[13px] text-ink-muted">{t("settingsSubtitle")}</p>
         </div>
 
         <ConnectionForm

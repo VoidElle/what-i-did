@@ -72,4 +72,5 @@ export interface SourceConfig {
   connections: JiraConnection[];
   devMode?: boolean;
   theme?: string;
+  language?: "en" | "it";
 }

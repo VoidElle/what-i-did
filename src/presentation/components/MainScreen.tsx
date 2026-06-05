@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Warning } from "@phosphor-icons/react";
+import { useTranslation } from "react-i18next";
 import type { ActivityIssue, SourceConfig } from "../../domain/entities";
 import type { IActivityRepository } from "../../domain/ports";
 import { fetchYesterdayActivity, dayWindow } from "../../application/fetchYesterdayActivity";
@@ -48,6 +49,7 @@ function SkeletonCard() {
 }
 
 export function MainScreen({ config, repo, onOpenSettings, onOpenCustomization }: Props) {
+  const { t } = useTranslation();
   const [issues, setIssues] = useState<ActivityIssue[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -131,7 +133,7 @@ export function MainScreen({ config, repo, onOpenSettings, onOpenCustomization }
         {/* Date */}
         <div className="px-4 py-3" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
           <span className="block text-[9px] font-semibold tracking-[0.9px] uppercase text-ink-faint mb-2">
-            Activity date
+            {t("activityDate")}
           </span>
           <Calendar value={date} onChange={setDate} />
         </div>
@@ -139,10 +141,10 @@ export function MainScreen({ config, repo, onOpenSettings, onOpenCustomization }
         {/* Nav */}
         <nav className="flex-1 overflow-y-auto px-2.5 py-3 scrollbar-custom">
           <span className="block text-[9px] font-semibold tracking-[0.9px] uppercase text-ink-faint px-2 pt-0.5 pb-2.5">
-            Projects
+            {t("projects")}
           </span>
           {!loading && !error && projects.length === 0 && (
-            <span className="block text-[11px] text-ink-faint px-2 py-1">No activity</span>
+            <span className="block text-[11px] text-ink-faint px-2 py-1">{t("noActivity")}</span>
           )}
           {projects.map((proj) => {
             const isActive = activeProject === proj || (!activeProject && proj === projects[0]);
@@ -201,7 +203,7 @@ export function MainScreen({ config, repo, onOpenSettings, onOpenCustomization }
               <circle cx="12" cy="12" r="4" />
               <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
             </svg>
-            Customization
+            {t("customization")}
           </button>
           <button
             className="flex items-center gap-1.5 text-ink-faint px-2 py-1.5 rounded text-xs font-medium w-full"
@@ -216,7 +218,7 @@ export function MainScreen({ config, repo, onOpenSettings, onOpenCustomization }
               <circle cx="12" cy="12" r="3" />
               <path d="M19.07 4.93a10 10 0 0 1 0 14.14M12 2v2M12 20v2M4.93 4.93a10 10 0 0 0 0 14.14M2 12h2M20 12h2" />
             </svg>
-            Settings
+            {t("settings")}
           </button>
         </div>
       </aside>
@@ -236,7 +238,7 @@ export function MainScreen({ config, repo, onOpenSettings, onOpenCustomization }
             <div className="card-core p-5">
               <div className="flex items-center gap-2 font-semibold text-[13px] text-danger-text mb-1.5">
                 <Warning size={13} weight="duotone" />
-                Error fetching activity
+                {t("errorTitle")}
               </div>
               <p className="text-xs text-danger-text/70 mb-4 leading-relaxed">{error}</p>
               <button
@@ -246,7 +248,7 @@ export function MainScreen({ config, repo, onOpenSettings, onOpenCustomization }
                 onMouseLeave={e => (e.currentTarget.style.background = "rgba(255,255,255,0.05)")}
                 onClick={() => load()}
               >
-                Retry
+                {t("retry")}
               </button>
             </div>
           </div>
@@ -254,8 +256,8 @@ export function MainScreen({ config, repo, onOpenSettings, onOpenCustomization }
 
         {!loading && !error && issues.length === 0 && (
           <div className="py-16 flex flex-col items-start gap-1.5">
-            <span className="text-[15px] font-medium text-ink tracking-[-0.2px]">No activity found</span>
-            <span className="text-[13px] text-ink-faint">No comments or status changes for your account on this date.</span>
+            <span className="text-[15px] font-medium text-ink tracking-[-0.2px]">{t("emptyTitle")}</span>
+            <span className="text-[13px] text-ink-faint">{t("emptySubtitle")}</span>
           </div>
         )}
 

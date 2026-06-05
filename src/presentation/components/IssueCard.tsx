@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Bug,
   BookOpen,
@@ -116,6 +117,7 @@ export function IssueCard({
   onLoadWorklogs,
   onFetchAttachmentUrl,
 }: IssueCardProps) {
+  const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
   const [worklogs, setWorklogs] = useState<Worklog[] | null>(null);
   const [showOlderStatus, setShowOlderStatus] = useState(false);
@@ -275,7 +277,7 @@ export function IssueCard({
               if (recentStatusChanges.length === 0 && olderStatusChanges.length === 0) return null;
               return (
                 <div>
-                  <div className="text-[9px] font-bold uppercase tracking-[0.8px] text-ink-muted mb-2.5 font-mono">Status Changes</div>
+                  <div className="text-[9px] font-bold uppercase tracking-[0.8px] text-ink-muted mb-2.5 font-mono">{t("sectionStatusChanges")}</div>
                   {recentStatusChanges.length > 0 && renderStatusList(recentStatusChanges)}
                   {olderStatusChanges.length > 0 && (
                     <div className={recentStatusChanges.length > 0 ? "mt-2" : ""}>
@@ -284,7 +286,7 @@ export function IssueCard({
                         onClick={(e) => { e.stopPropagation(); setShowOlderStatus((v) => !v); }}
                       >
                         <CaretDown size={10} weight="bold" className={`transition-transform duration-150 ${showOlderStatus ? "rotate-180" : ""}`} />
-                        {showOlderStatus ? "Hide" : `Show ${olderStatusChanges.length} older change${olderStatusChanges.length > 1 ? "s" : ""}`}
+                        {showOlderStatus ? t("hide") : t("showOlderChanges", { count: olderStatusChanges.length })}
                       </button>
                       {showOlderStatus && (
                         <div className="opacity-70">
@@ -309,20 +311,20 @@ export function IssueCard({
               if (changedInWindow) {
                 return (
                   <div>
-                    <div className="text-[9px] font-bold uppercase tracking-[0.8px] text-ink-muted mb-2.5 font-mono">Description</div>
+                    <div className="text-[9px] font-bold uppercase tracking-[0.8px] text-ink-muted mb-2.5 font-mono">{t("sectionDescription")}</div>
                     <AdfRenderer rich={issue.descriptionRich} fallback={issue.description} attachments={issue.attachments} onFetchUrl={onFetchAttachmentUrl} />
                   </div>
                 );
               }
               return (
                 <div>
-                  <div className="text-[9px] font-bold uppercase tracking-[0.8px] text-ink-muted mb-2.5 font-mono">Description</div>
+                  <div className="text-[9px] font-bold uppercase tracking-[0.8px] text-ink-muted mb-2.5 font-mono">{t("sectionDescription")}</div>
                   <button
                     className="flex items-center gap-1 text-[10px] text-ink-faint hover:text-ink-muted transition-colors duration-150"
                     onClick={(e) => { e.stopPropagation(); setShowDesc((v) => !v); }}
                   >
                     <CaretDown size={10} weight="bold" className={`transition-transform duration-150 ${showDesc ? "rotate-180" : ""}`} />
-                    {showDesc ? "Hide description" : "Show description"}
+                    {showDesc ? t("hideDescription") : t("showDescription")}
                   </button>
                   {showDesc && (
                     <div className="mt-2 opacity-80">
@@ -365,7 +367,7 @@ export function IssueCard({
               return (
                 <div>
                   <div className="text-[9px] font-bold uppercase tracking-[0.8px] text-ink-muted mb-2.5 font-mono">
-                    Comments{recentComments.length > 0 ? ` (${recentComments.length})` : ""}
+                    {recentComments.length > 0 ? t("commentsWithCount", { count: recentComments.length }) : t("sectionComments")}
                   </div>
                   {recentComments.length > 0 && (
                     <div className="flex flex-col gap-2">
@@ -380,8 +382,8 @@ export function IssueCard({
                       >
                         <CaretDown size={10} weight="bold" className={`transition-transform duration-150 ${showOlderComments ? "rotate-180" : ""}`} />
                         {showOlderComments
-                          ? "Hide older comments"
-                          : `Show ${olderComments.length} older comment${olderComments.length > 1 ? "s" : ""}`}
+                          ? t("hideOlderComments")
+                          : t("showOlderComments", { count: olderComments.length })}
                       </button>
                       {showOlderComments && (
                         <div className="flex flex-col gap-2 opacity-70">
@@ -397,7 +399,7 @@ export function IssueCard({
             {/* ── Worklogs ─────────────────────────────────────────────────── */}
             {worklogs && worklogs.length > 0 && (
               <div>
-                <div className="text-[9px] font-bold uppercase tracking-[0.8px] text-ink-muted mb-2.5 font-mono">Worklogs</div>
+                <div className="text-[9px] font-bold uppercase tracking-[0.8px] text-ink-muted mb-2.5 font-mono">{t("sectionWorklogs")}</div>
                 <div className="flex flex-col">
                   {worklogs.map((w) => (
                     <div key={w.id} className="flex items-center gap-2.5 text-[11px] text-ink-muted py-1.5 border-b border-bdr-subtle last:border-b-0">
