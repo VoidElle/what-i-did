@@ -118,7 +118,6 @@ export function IssueCard({
 }: IssueCardProps) {
   const [expanded, setExpanded] = useState(false);
   const [worklogs, setWorklogs] = useState<Worklog[] | null>(null);
-  const [loadingWorklogs, setLoadingWorklogs] = useState(false);
   const [showOlderStatus, setShowOlderStatus] = useState(false);
   const [showDesc, setShowDesc] = useState(false);
   const [showOlderComments, setShowOlderComments] = useState(false);
@@ -139,10 +138,8 @@ export function IssueCard({
     const next = !expanded;
     setExpanded(next);
     if (next && worklogs === null) {
-      setLoadingWorklogs(true);
       const logs = await onLoadWorklogs(issue.key);
       setWorklogs(logs);
-      setLoadingWorklogs(false);
     }
   };
 
@@ -182,7 +179,7 @@ export function IssueCard({
             {issue.status.name}
           </span>
           <span className={`text-ink-faint flex items-center ${expanded ? "rotate-180" : ""}`}
-            style={{ transition: "transform 260ms cubic-bezier(0.34,1.56,0.64,1)" }}>
+            style={{ transition: "transform 260ms cubic-bezier(0.16,1,0.3,1)" }}>
             <CaretDown size={10} weight="bold" />
           </span>
         </div>
@@ -193,10 +190,6 @@ export function IssueCard({
       {/* Meta chips */}
       <div className="flex gap-1 flex-wrap">
         {issue.priority && <PriorityBadge name={issue.priority.name} />}
-        <span className="text-[10px] font-medium text-ink-faint px-[7px] py-[2px] rounded"
-          style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}>
-          {new Date(issue.updatedAt).toLocaleDateString()}
-        </span>
         {issue.comments.length > 0 && (
           <span className="flex items-center gap-[3px] text-[10px] font-medium text-ink-faint px-[7px] py-[2px] rounded"
             style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}>
@@ -219,19 +212,20 @@ export function IssueCard({
         Always rendered in DOM (accessible, interruptible).
       */}
       <div
-        className="grid"
+        className="grid overflow-hidden"
         style={{
           gridTemplateRows: expanded ? "1fr" : "0fr",
-          transition: "grid-template-rows 320ms cubic-bezier(0.16,1,0.3,1)",
+          transition: "grid-template-rows 300ms cubic-bezier(0.16,1,0.3,1)",
         }}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="overflow-hidden min-h-0">
           <div
-            className={`mt-3.5 pt-4 flex flex-col gap-[18px] ${expanded ? "opacity-100" : "opacity-0"}`}
+            className="mt-3.5 pt-4 flex flex-col gap-[18px]"
             style={{
               borderTop: "1px solid rgba(255,255,255,0.05)",
-              transition: "opacity 200ms cubic-bezier(0.16,1,0.3,1)",
+              opacity: expanded ? 1 : 0,
+              transition: `opacity 180ms cubic-bezier(0.16,1,0.3,1) ${expanded ? "80ms" : "0ms"}`,
             }}
           >
             {/* ── Status changes ───────────────────────────────────────────── */}
@@ -315,14 +309,14 @@ export function IssueCard({
               if (changedInWindow) {
                 return (
                   <div>
-                    <div className="text-[9px] font-bold uppercase tracking-[0.8px] text-ink-muted mb-2 font-mono">Description</div>
+                    <div className="text-[9px] font-bold uppercase tracking-[0.8px] text-ink-muted mb-2.5 font-mono">Description</div>
                     <AdfRenderer rich={issue.descriptionRich} fallback={issue.description} attachments={issue.attachments} onFetchUrl={onFetchAttachmentUrl} />
                   </div>
                 );
               }
               return (
                 <div>
-                  <div className="text-[9px] font-bold uppercase tracking-[0.8px] text-ink-muted mb-2 font-mono">Description</div>
+                  <div className="text-[9px] font-bold uppercase tracking-[0.8px] text-ink-muted mb-2.5 font-mono">Description</div>
                   <button
                     className="flex items-center gap-1 text-[10px] text-ink-faint hover:text-ink-muted transition-colors duration-150"
                     onClick={(e) => { e.stopPropagation(); setShowDesc((v) => !v); }}
@@ -370,15 +364,13 @@ export function IssueCard({
 
               return (
                 <div>
+                  <div className="text-[9px] font-bold uppercase tracking-[0.8px] text-ink-muted mb-2.5 font-mono">
+                    Comments{recentComments.length > 0 ? ` (${recentComments.length})` : ""}
+                  </div>
                   {recentComments.length > 0 && (
-                    <>
-                      <div className="text-[9px] font-bold uppercase tracking-[0.8px] text-ink-muted mb-2 font-mono">
-                        Comments ({recentComments.length})
-                      </div>
-                      <div className="flex flex-col gap-2">
-                        {recentComments.map(renderComment)}
-                      </div>
-                    </>
+                    <div className="flex flex-col gap-2">
+                      {recentComments.map(renderComment)}
+                    </div>
                   )}
                   {olderComments.length > 0 && (
                     <div className={recentComments.length > 0 ? "mt-2" : ""}>
@@ -403,26 +395,23 @@ export function IssueCard({
             })()}
 
             {/* ── Worklogs ─────────────────────────────────────────────────── */}
-            {(loadingWorklogs || (worklogs && worklogs.length > 0)) && (
+            {worklogs && worklogs.length > 0 && (
               <div>
-                <div className="text-[9px] font-bold uppercase tracking-[0.8px] text-ink-muted mb-2 font-mono">Worklogs</div>
-                {loadingWorklogs && <span className="text-xs text-ink-faint">Loading...</span>}
-                {!loadingWorklogs && worklogs && worklogs.length > 0 && (
-                  <div className="flex flex-col">
-                    {worklogs.map((w) => (
-                      <div key={w.id} className="flex items-center gap-2.5 text-[11px] text-ink-muted py-1.5 border-b border-bdr-subtle last:border-b-0">
-                        <span className="font-bold text-accent font-mono min-w-[44px]">{w.timeSpent}</span>
-                        <span className="font-medium text-ink min-w-[80px]">{w.author.displayName}</span>
-                        <span className="text-[10px] text-ink-faint font-mono">
-                          {new Date(w.startedAt).toLocaleDateString()}
-                        </span>
-                        {w.comment && (
-                          <span className="text-ink-muted flex-1 overflow-hidden text-ellipsis whitespace-nowrap">{w.comment}</span>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
+                <div className="text-[9px] font-bold uppercase tracking-[0.8px] text-ink-muted mb-2.5 font-mono">Worklogs</div>
+                <div className="flex flex-col">
+                  {worklogs.map((w) => (
+                    <div key={w.id} className="flex items-center gap-2.5 text-[11px] text-ink-muted py-1.5 border-b border-bdr-subtle last:border-b-0">
+                      <span className="font-bold text-accent font-mono min-w-[44px]">{w.timeSpent}</span>
+                      <span className="font-medium text-ink min-w-[80px]">{w.author.displayName}</span>
+                      <span className="text-[10px] text-ink-faint font-mono">
+                        {new Date(w.startedAt).toLocaleDateString()}
+                      </span>
+                      {w.comment && (
+                        <span className="text-ink-muted flex-1 overflow-hidden text-ellipsis whitespace-nowrap">{w.comment}</span>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </div>

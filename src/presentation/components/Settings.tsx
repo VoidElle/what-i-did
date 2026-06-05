@@ -19,6 +19,7 @@ export function SettingsScreen({
   const [baseUrl, setBaseUrl] = useState(initialConfig?.baseUrl ?? "");
   const [email, setEmail] = useState(initialConfig?.email ?? "");
   const [token, setToken] = useState(initialConfig?.token ?? "");
+  const [devMode, setDevMode] = useState(initialConfig?.devMode ?? false);
   const [error, setError] = useState("");
 
   const handleSave = () => {
@@ -31,6 +32,7 @@ export function SettingsScreen({
       baseUrl: baseUrl.replace(/\/$/, "").trim(),
       email: email.trim(),
       token: token.trim(),
+      devMode,
     });
   };
 
@@ -104,7 +106,37 @@ export function SettingsScreen({
             </div>
           )}
 
-          <div className="flex gap-2 mt-7">
+          {/* Mock mode */}
+          <div className="mt-8 pt-4" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+            <button
+              type="button"
+              className="flex items-center justify-between w-full"
+              onClick={() => setDevMode((v) => !v)}
+            >
+              <span className="text-[11px] text-ink-faint">Mock mode</span>
+              <div
+                className="relative flex-shrink-0 w-7 h-4 rounded-full ml-4"
+                style={{
+                  background: devMode ? "rgba(52,211,153,0.7)" : "rgba(255,255,255,0.08)",
+                  transition: "background 200ms cubic-bezier(0.16,1,0.3,1)",
+                }}
+              >
+                <div
+                  className="absolute top-[2px] w-3 h-3 rounded-full"
+                  style={{
+                    background: devMode ? "#0d1410" : "rgba(255,255,255,0.35)",
+                    left: devMode ? "calc(100% - 14px)" : "2px",
+                    transition: "left 200ms cubic-bezier(0.34,1.56,0.64,1)",
+                  }}
+                />
+              </div>
+            </button>
+            <p className="mt-1.5 text-[10px] text-ink-faint leading-relaxed" style={{ opacity: 0.5 }}>
+              Uses mock data with multiple projects and tickets. No Jira connection needed.
+            </p>
+          </div>
+
+          <div className="flex gap-2 mt-6">
             <button
               className="bg-accent text-[#0d1410] px-[18px] py-2 rounded-sm font-semibold text-[13px] transition-[opacity,transform] duration-150 ease-ui hover:opacity-[0.88] active:scale-[0.97]"
               onClick={handleSave}

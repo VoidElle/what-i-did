@@ -3,10 +3,11 @@ import { Warning } from "@phosphor-icons/react";
 import type { ActivityIssue, SourceConfig } from "../../domain/entities";
 import type { IActivityRepository } from "../../domain/ports";
 import { fetchYesterdayActivity, dayWindow } from "../../application/fetchYesterdayActivity";
+import { mockActivity } from "../../data/mock/mockActivity";
 import { IssueCard } from "./IssueCard";
 import { StandupSummary } from "./StandupSummary";
-import { BrandIcon } from "./BrandIcon";
 import { Calendar } from "./Calendar";
+import { BrandIcon } from "./BrandIcon";
 
 interface Props {
   config: SourceConfig;
@@ -52,6 +53,11 @@ export function MainScreen({ config, repo, onOpenSettings }: Props) {
   const [date, setDate] = useState<Date>(defaultDate);
 
   const load = (cancelled?: { current: boolean }) => {
+    if (config.devMode) {
+      setIssues(mockActivity);
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     setError(null);
     fetchYesterdayActivity(repo, config, date)

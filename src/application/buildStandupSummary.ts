@@ -59,7 +59,7 @@ export function buildStandupSummary(
         parts.push("description updated");
       }
 
-      lines.push(`• [${issue.key}] ${issue.summary} — ${parts.join(", ")}`);
+      lines.push(`• [${issue.key}] ${issue.summary} (${parts.join(", ")})`);
     }
 
     sections.push(lines.join("\n"));

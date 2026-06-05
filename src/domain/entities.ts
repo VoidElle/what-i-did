@@ -62,4 +62,5 @@ export interface SourceConfig {
   baseUrl: string;
   email: string;
   token: string;
+  devMode?: boolean;
 }

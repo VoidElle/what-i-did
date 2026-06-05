@@ -312,7 +312,7 @@ export function AdfRenderer({ rich, fallback, className = "", attachments = [], 
   if (rich && isAdfNode(rich.raw)) {
     const node = rich.raw;
     return (
-      <div className={className}>
+      <div className={`[&>*:last-child]:mb-0 ${className}`}>
         {node.type === "doc"
           ? node.content?.map((c, i) => renderBlock(c, i, ctx))
           : renderBlock(node, 0, ctx)

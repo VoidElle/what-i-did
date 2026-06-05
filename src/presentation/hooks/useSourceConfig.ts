@@ -16,9 +16,10 @@ export function useSourceConfig() {
       const baseUrl = await store.get<string>("baseUrl");
       const email = await store.get<string>("email");
       const token = await store.get<string>("token");
+      const devMode = await store.get<boolean>("devMode") ?? false;
       if (!cancelled) {
         setConfig(
-          baseUrl && email && token ? { baseUrl, email, token } : null
+          baseUrl && email && token ? { baseUrl, email, token, devMode } : null
         );
         setLoading(false);
       }
@@ -33,6 +34,7 @@ export function useSourceConfig() {
     await store.set("baseUrl", next.baseUrl);
     await store.set("email", next.email);
     await store.set("token", next.token);
+    await store.set("devMode", next.devMode ?? false);
     setConfig(next);
   }, []);
 
