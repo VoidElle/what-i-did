@@ -16,7 +16,6 @@ import {
   ArrowRight,
 } from "@phosphor-icons/react";
 import type { ActivityIssue, Worklog } from "../../domain/entities";
-import { AttachmentList } from "./AttachmentList";
 import { AdfRenderer } from "./AdfRenderer";
 
 const STATUS_STYLE: Record<string, { bg: string; text: string }> = {
@@ -303,7 +302,7 @@ export function IssueCard({
                 return (
                   <div>
                     <div className="text-[9px] font-bold uppercase tracking-[0.8px] text-ink-muted mb-2 font-mono">Description</div>
-                    <AdfRenderer rich={issue.descriptionRich} fallback={issue.description} />
+                    <AdfRenderer rich={issue.descriptionRich} fallback={issue.description} attachments={issue.attachments} onFetchUrl={onFetchAttachmentUrl} />
                   </div>
                 );
               }
@@ -319,18 +318,12 @@ export function IssueCard({
                   </button>
                   {showDesc && (
                     <div className="mt-2 opacity-80">
-                      <AdfRenderer rich={issue.descriptionRich} fallback={issue.description} />
+                      <AdfRenderer rich={issue.descriptionRich} fallback={issue.description} attachments={issue.attachments} onFetchUrl={onFetchAttachmentUrl} />
                     </div>
                   )}
                 </div>
               );
             })()}
-
-            {/* ── Attachments ───────────────────────────────────────────────── */}
-            <AttachmentList
-              attachments={issue.attachments}
-              onFetchUrl={onFetchAttachmentUrl}
-            />
 
             {/* ── Comments ─────────────────────────────────────────────────── */}
             {issue.comments.length > 0 && (() => {
@@ -356,7 +349,7 @@ export function IssueCard({
                     </span>
                   </div>
                   <div className="text-xs text-ink leading-[1.55]">
-                    <AdfRenderer rich={c.bodyRich} fallback={c.body} />
+                    <AdfRenderer rich={c.bodyRich} fallback={c.body} attachments={issue.attachments} onFetchUrl={onFetchAttachmentUrl} />
                   </div>
                 </div>
               );

@@ -80,7 +80,7 @@ export function MainScreen({ config, repo, onOpenSettings }: Props) {
           <div className="w-[26px] h-[26px] bg-accent-dim border border-accent-border rounded-[7px] flex items-center justify-center flex-shrink-0 text-accent">
             <BrandIcon size={14} />
           </div>
-          <span className="text-[13px] font-semibold text-ink tracking-[-0.2px]">WhatDidIDo</span>
+          <span className="text-[13px] font-semibold text-ink tracking-[-0.2px]">What I Did</span>
         </div>
 
         {/* Date */}

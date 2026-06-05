@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "what-i-did",
+        "title": "What I Did - Jira Stand-Up Tracker",
         "width": 960,
         "height": 720,
         "minWidth": 640,

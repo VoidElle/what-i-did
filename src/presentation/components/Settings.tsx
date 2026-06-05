@@ -42,7 +42,7 @@ export function SettingsScreen({
           <div className="w-8 h-8 bg-accent-dim border border-accent-border rounded-[9px] flex items-center justify-center text-accent">
             <BrandIcon size={16} />
           </div>
-          <span className="text-[15px] font-semibold text-ink tracking-[-0.3px]">WhatDidIDo</span>
+          <span className="text-[15px] font-semibold text-ink tracking-[-0.3px]">What I Did</span>
         </div>
         <p className="text-[13px] text-ink-muted leading-[1.65] mb-8">
           Connect your Jira account to see what you worked on yesterday, ready to paste into standup.
