@@ -6,13 +6,15 @@ import { buildStandupSummary } from "../../application/buildStandupSummary";
 
 interface Props {
   issues: ActivityIssue[];
+  windowStart: number;
+  windowEnd: number;
 }
 
-export function StandupSummary({ issues }: Props) {
+export function StandupSummary({ issues, windowStart, windowEnd }: Props) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
-    await writeText(buildStandupSummary(issues));
+    await writeText(buildStandupSummary(issues, windowStart, windowEnd));
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };

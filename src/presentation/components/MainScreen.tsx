@@ -119,7 +119,7 @@ export function MainScreen({ config, repo, onOpenSettings }: Props) {
 
         {/* Footer */}
         <div className="px-2.5 py-3 border-t border-bdr-subtle flex flex-col gap-1.5">
-          {!loading && !error && <StandupSummary issues={issues} />}
+          {!loading && !error && <StandupSummary issues={issues} windowStart={window.start} windowEnd={window.end} />}
           <button
             className="flex items-center gap-1.5 bg-transparent text-ink-muted px-2 py-1.5 rounded-sm border border-transparent text-xs font-medium transition-[background,color,border-color,transform] duration-150 ease-ui w-full hover:bg-surface-2 hover:text-ink hover:border-bdr active:scale-[0.97]"
             onClick={onOpenSettings}

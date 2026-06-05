@@ -103,11 +103,13 @@ export function Calendar({ value, onChange }: Props) {
   const shiftMonth = (delta: number) =>
     setView((v) => new Date(v.getFullYear(), v.getMonth() + delta, 1));
 
-  const label = value.toLocaleDateString(undefined, {
-    weekday: "long",
-    month: "short",
-    day: "numeric",
-  });
+  const label = value
+    .toLocaleDateString(undefined, {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+    })
+    .replace(/\b\w/g, (c) => c.toUpperCase());
 
   return (
     <div className="relative">
@@ -117,7 +119,7 @@ export function Calendar({ value, onChange }: Props) {
         onClick={() => setOpen((o) => !o)}
       >
         <CalendarBlank size={13} className="text-ink-muted flex-shrink-0" />
-        <span className="truncate capitalize">{label}</span>
+        <span className="flex-1 min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">{label}</span>
       </button>
 
       {open && createPortal(
