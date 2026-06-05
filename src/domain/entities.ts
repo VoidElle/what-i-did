@@ -56,12 +56,20 @@ export interface ActivityIssue {
   comments: IssueComment[];
   statusChanges: StatusChange[]; // pre-filtered from changelog
   project: { key: string; name: string };
+  sourceConnectionId: string;
+  sourceConnectionName: string;
 }
 
-export interface SourceConfig {
+export interface JiraConnection {
+  id: string;
+  name: string;
   baseUrl: string;
   email: string;
   token: string;
+}
+
+export interface SourceConfig {
+  connections: JiraConnection[];
   devMode?: boolean;
   theme?: string;
 }

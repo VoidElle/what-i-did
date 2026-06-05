@@ -182,5 +182,7 @@ export function mapIssue(raw: JiraIssueRaw): ActivityIssue {
     comments: (raw.fields.comment?.comments ?? []).map(mapComment),
     statusChanges: mapStatusChanges(raw.changelog?.histories ?? []),
     project: raw.fields.project,
+    sourceConnectionId: "",
+    sourceConnectionName: "",
   };
 }

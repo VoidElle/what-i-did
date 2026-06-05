@@ -25,39 +25,42 @@ function App() {
     );
   }
 
-  if (!config || screen === "settings") {
-    return (
-      <SettingsScreen
-        initialConfig={config}
-        onSave={(cfg) => {
-          saveConfig(cfg);
-          setScreen("main");
-        }}
-        canCancel={!!config}
-        onCancel={() => setScreen("main")}
-      />
-    );
-  }
-
-  if (screen === "customization") {
-    return (
-      <CustomizationScreen
-        config={config}
-        onSave={(cfg) => saveConfig(cfg)}
-        onCancel={() => setScreen("main")}
-      />
-    );
-  }
+  const needsOnboarding = !config || config.connections.length === 0;
 
   return (
     <>
-      <div className="noise-overlay" aria-hidden="true" />
-      <MainScreen
-        config={config}
-        repo={repo}
-        onOpenSettings={() => setScreen("settings")}
-        onOpenCustomization={() => setScreen("customization")}
-      />
+      {/* MainScreen is always mounted once onboarded — preserves fetch cache */}
+      {config && config.connections.length > 0 && (
+        <div className={screen !== "main" ? "hidden" : ""}>
+          <div className="noise-overlay" aria-hidden="true" />
+          <MainScreen
+            config={config}
+            repo={repo}
+            onOpenSettings={() => setScreen("settings")}
+            onOpenCustomization={() => setScreen("customization")}
+          />
+        </div>
+      )}
+
+      {(needsOnboarding || screen === "settings") && (
+        <SettingsScreen
+          initialConfig={config}
+          onSave={(cfg) => {
+            saveConfig(cfg);
+            setScreen("main");
+          }}
+          canCancel={!needsOnboarding}
+          onCancel={() => setScreen("main")}
+        />
+      )}
+
+      {screen === "customization" && config && (
+        <CustomizationScreen
+          config={config}
+          onSave={(cfg) => saveConfig(cfg)}
+          onCancel={() => setScreen("main")}
+        />
+      )}
     </>
   );
 }

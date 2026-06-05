@@ -1,4 +1,4 @@
-import type { ActivityIssue, SourceConfig } from "../domain/entities";
+import type { ActivityIssue, JiraConnection, SourceConfig } from "../domain/entities";
 import type { IActivityRepository } from "../domain/ports";
 
 export function dayWindow(date: Date): { start: number; end: number } {
@@ -34,12 +34,43 @@ function userActedOnIssue(
   );
 }
 
+export interface FetchResult {
+  issues: ActivityIssue[];
+  errors: { connectionId: string; connectionName: string; message: string }[];
+}
+
 export async function fetchYesterdayActivity(
   repo: IActivityRepository,
   config: SourceConfig,
   date: Date
-): Promise<ActivityIssue[]> {
-  const issues = await repo.fetchYesterdayIssues(config, date);
+): Promise<FetchResult> {
   const window = dayWindow(date);
-  return issues.filter((issue) => userActedOnIssue(issue, config.email, window));
+
+  const results = await Promise.allSettled(
+    config.connections.map((conn: JiraConnection) =>
+      repo
+        .fetchYesterdayIssues(conn, date)
+        .then((issues) =>
+          issues.filter((issue) => userActedOnIssue(issue, conn.email, window))
+        )
+    )
+  );
+
+  const issues: ActivityIssue[] = [];
+  const errors: FetchResult["errors"] = [];
+
+  results.forEach((result, i) => {
+    if (result.status === "fulfilled") {
+      issues.push(...result.value);
+    } else {
+      const conn = config.connections[i];
+      errors.push({
+        connectionId: conn.id,
+        connectionName: conn.name,
+        message: (result.reason as Error)?.message ?? "Unknown error",
+      });
+    }
+  });
+
+  return { issues, errors };
 }

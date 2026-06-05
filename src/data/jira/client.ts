@@ -1,5 +1,5 @@
 import { fetch } from "@tauri-apps/plugin-http";
-import type { SourceConfig } from "../../domain/entities";
+import type { JiraConnection } from "../../domain/entities";
 import type { JiraIssueRaw, JiraWorklogRaw } from "./types";
 
 function authHeader(email: string, token: string): string {
@@ -22,10 +22,10 @@ function jqlDate(d: Date): string {
 }
 
 export async function getYesterdayIssues(
-  config: SourceConfig,
+  connection: JiraConnection,
   date: Date
 ): Promise<JiraIssueRaw[]> {
-  const { baseUrl, email, token } = config;
+  const { baseUrl, email, token } = connection;
   const start = new Date(date);
   start.setHours(0, 0, 0, 0);
   const end = new Date(start);
@@ -52,10 +52,10 @@ export async function getYesterdayIssues(
 }
 
 export async function getWorklogs(
-  config: SourceConfig,
+  connection: JiraConnection,
   issueKey: string
 ): Promise<JiraWorklogRaw[]> {
-  const { baseUrl, email, token } = config;
+  const { baseUrl, email, token } = connection;
   const url = `${baseUrl}/rest/api/3/issue/${issueKey}/worklog`;
 
   const res = await fetch(url, {
@@ -70,11 +70,11 @@ export async function getWorklogs(
 }
 
 export async function getAttachmentBlob(
-  config: SourceConfig,
+  connection: JiraConnection,
   contentUrl: string,
   mimeType: string
 ): Promise<string> {
-  const { email, token } = config;
+  const { email, token } = connection;
   const res = await fetch(contentUrl, {
     method: "GET",
     headers: { Authorization: authHeader(email, token) },

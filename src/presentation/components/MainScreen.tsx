@@ -62,7 +62,16 @@ export function MainScreen({ config, repo, onOpenSettings, onOpenCustomization }
     setLoading(true);
     setError(null);
     fetchYesterdayActivity(repo, config, date)
-      .then((data) => { if (!cancelled?.current) setIssues(data); })
+      .then(({ issues, errors }) => {
+        if (cancelled?.current) return;
+        setIssues(issues);
+        if (errors.length > 0 && issues.length === 0) {
+          setError(errors.map((e) => `${e.connectionName}: ${e.message}`).join("\n"));
+        } else if (errors.length > 0) {
+          // partial success — show inline warning but don't block
+          console.warn("Some connections failed:", errors);
+        }
+      })
       .catch((e: Error) => { if (!cancelled?.current) setError(e.message); })
       .finally(() => { if (!cancelled?.current) setLoading(false); });
   };
@@ -71,7 +80,9 @@ export function MainScreen({ config, repo, onOpenSettings, onOpenCustomization }
     const c = { current: false };
     load(c);
     return () => { c.current = true; };
-  }, [config, repo, date]);
+  // Only refetch when connections, devMode, or date actually change — not theme
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(config.connections), config.devMode, date]);
 
   const window = dayWindow(date);
   const grouped = groupByProject(issues);
@@ -261,16 +272,22 @@ export function MainScreen({ config, repo, onOpenSettings, onOpenCustomization }
                   const idx = cardIndex++;
                   return (
                     <IssueCard
-                      key={issue.id}
+                      key={`${issue.sourceConnectionId}:${issue.id}`}
                       issue={issue}
                       staggerIndex={idx}
                       windowStart={window.start}
                       windowEnd={window.end}
-                      currentUserEmail={config.email}
-                      onLoadWorklogs={(key) => repo.fetchWorklogs(config, key)}
-                      onFetchAttachmentUrl={(url, mime) =>
-                        repo.fetchAttachmentUrl(config, url, mime)
+                      currentUserEmail={
+                        config.connections.find((c) => c.id === issue.sourceConnectionId)?.email ?? ""
                       }
+                      onLoadWorklogs={(key) => {
+                        const conn = config.connections.find((c) => c.id === issue.sourceConnectionId);
+                        return conn ? repo.fetchWorklogs(conn, key) : Promise.resolve([]);
+                      }}
+                      onFetchAttachmentUrl={(url, mime) => {
+                        const conn = config.connections.find((c) => c.id === issue.sourceConnectionId);
+                        return conn ? repo.fetchAttachmentUrl(conn, url, mime) : Promise.reject(new Error("Connection not found"));
+                      }}
                     />
                   );
                 })}

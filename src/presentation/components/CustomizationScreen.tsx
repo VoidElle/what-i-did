@@ -1,5 +1,6 @@
 import type { SourceConfig } from "../../domain/entities";
 import { BrandIcon } from "./BrandIcon";
+import { ArrowLeft } from "@phosphor-icons/react";
 
 const THEMES = [
   { id: "emerald", color: "#34d399", label: "Emerald" },
@@ -123,13 +124,11 @@ export function CustomizationScreen({ config, onSave, onCancel }: Props) {
 
         <div className="flex gap-2 mt-10">
           <button
-            className="flex items-center gap-1.5 text-ink-muted px-3.5 py-2 rounded-sm text-[13px] font-medium transition-[color,transform] duration-150 ease-ui hover:text-ink active:scale-[0.97]"
-            style={{ border: "1px solid rgba(255,255,255,0.22)" }}
+            className="group flex items-center gap-2 text-ink-faint text-[12px] font-medium px-3 py-2 rounded-lg transition-all duration-200 hover:text-ink"
+            style={{ border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.03)" }}
             onClick={onCancel}
           >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M19 12H5M12 5l-7 7 7 7" />
-            </svg>
+            <ArrowLeft size={13} weight="bold" className="transition-transform duration-200 group-hover:-translate-x-0.5" />
             Back
           </button>
         </div>

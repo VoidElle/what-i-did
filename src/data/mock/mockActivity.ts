@@ -19,6 +19,8 @@ export const mockActivity: ActivityIssue[] = [
     updatedAt: ago(2),
     attachments: [],
     project: { key: "CORE", name: "Core Platform" },
+    sourceConnectionId: "mock-connection",
+    sourceConnectionName: "Mock Jira",
     statusChanges: [
       { id: "sc1", from: "In Progress", to: "In Review", changedAt: ago(3), author: { displayName: "You", email: "dev@example.com" } },
       { id: "sc2", from: "To Do", to: "In Progress", changedAt: ago(26), author: { displayName: "You", email: "dev@example.com" } },
@@ -56,6 +58,8 @@ export const mockActivity: ActivityIssue[] = [
     updatedAt: ago(5),
     attachments: [],
     project: { key: "CORE", name: "Core Platform" },
+    sourceConnectionId: "mock-connection",
+    sourceConnectionName: "Mock Jira",
     statusChanges: [
       { id: "sc3", from: "In Progress", to: "Done", changedAt: ago(5), author: { displayName: "You", email: "dev@example.com" } },
     ],
@@ -84,6 +88,8 @@ export const mockActivity: ActivityIssue[] = [
     updatedAt: ago(1),
     attachments: [],
     project: { key: "CORE", name: "Core Platform" },
+    sourceConnectionId: "mock-connection",
+    sourceConnectionName: "Mock Jira",
     statusChanges: [
       { id: "sc4", from: "To Do", to: "In Progress", changedAt: ago(6), author: { displayName: "You", email: "dev@example.com" } },
     ],
@@ -130,6 +136,8 @@ export const mockActivity: ActivityIssue[] = [
     updatedAt: ago(2),
     attachments: [],
     project: { key: "DESIGN", name: "Design System" },
+    sourceConnectionId: "mock-connection",
+    sourceConnectionName: "Mock Jira",
     statusChanges: [
       { id: "sc5", from: "To Do", to: "In Progress", changedAt: ago(8), author: { displayName: "You", email: "dev@example.com" } },
     ],
@@ -166,6 +174,8 @@ export const mockActivity: ActivityIssue[] = [
     updatedAt: ago(7),
     attachments: [],
     project: { key: "DESIGN", name: "Design System" },
+    sourceConnectionId: "mock-connection",
+    sourceConnectionName: "Mock Jira",
     statusChanges: [
       { id: "sc6", from: "In Progress", to: "Done", changedAt: ago(7), author: { displayName: "You", email: "dev@example.com" } },
     ],
@@ -185,6 +195,8 @@ export const mockActivity: ActivityIssue[] = [
     updatedAt: ago(1),
     attachments: [],
     project: { key: "DESIGN", name: "Design System" },
+    sourceConnectionId: "mock-connection",
+    sourceConnectionName: "Mock Jira",
     statusChanges: [],
     comments: [
       {
@@ -213,6 +225,8 @@ export const mockActivity: ActivityIssue[] = [
     updatedAt: ago(1),
     attachments: [],
     project: { key: "INFRA", name: "Infrastructure" },
+    sourceConnectionId: "mock-connection",
+    sourceConnectionName: "Mock Jira",
     statusChanges: [
       { id: "sc7", from: "In Progress", to: "In Review", changedAt: ago(4), author: { displayName: "You", email: "dev@example.com" } },
     ],
