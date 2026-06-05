@@ -2,6 +2,7 @@ import type {
   ActivityIssue,
   Attachment,
   IssueComment,
+  RichContent,
   StatusChange,
   Worklog,
 } from "../../domain/entities";
@@ -89,6 +90,13 @@ function mapAttachment(raw: JiraAttachmentRaw): Attachment {
   };
 }
 
+function toRichContent(
+  node: JiraAdfNode | string | null | undefined
+): RichContent | null {
+  if (!node || typeof node === "string") return null;
+  return { raw: node };
+}
+
 function mapComment(raw: JiraCommentRaw): IssueComment {
   return {
     id: raw.id,
@@ -97,9 +105,23 @@ function mapComment(raw: JiraCommentRaw): IssueComment {
       email: raw.author.emailAddress,
     },
     body: extractAdfText(raw.body),
+    bodyRich: toRichContent(raw.body),
     createdAt: raw.created,
     updatedAt: raw.updated,
   };
+}
+
+function mapDescriptionLastChangedAt(
+  histories: JiraChangelogHistory[]
+): string | null {
+  // Walk histories newest-first (Jira returns oldest-first, so reverse)
+  for (let i = histories.length - 1; i >= 0; i--) {
+    const h = histories[i];
+    if (h.items.some((item) => item.field === "description")) {
+      return h.created;
+    }
+  }
+  return null;
 }
 
 function mapStatusChanges(histories: JiraChangelogHistory[]): StatusChange[] {
@@ -139,6 +161,10 @@ export function mapIssue(raw: JiraIssueRaw): ActivityIssue {
     key: raw.key,
     summary: raw.fields.summary,
     description: extractAdfText(raw.fields.description),
+    descriptionRich: toRichContent(raw.fields.description),
+    descriptionLastChangedAt: mapDescriptionLastChangedAt(
+      raw.changelog?.histories ?? []
+    ),
     status: {
       name: raw.fields.status.name,
       colorName: raw.fields.status.statusCategory.colorName,

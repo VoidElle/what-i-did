@@ -181,6 +181,7 @@ export function MainScreen({ config, repo, onOpenSettings }: Props) {
                     staggerIndex={idx}
                     windowStart={window.start}
                     windowEnd={window.end}
+                    currentUserEmail={config.email}
                     onLoadWorklogs={(key) => repo.fetchWorklogs(config, key)}
                     onFetchAttachmentUrl={(url, mime) =>
                       repo.fetchAttachmentUrl(config, url, mime)
