@@ -106,14 +106,14 @@ export function SettingsScreen({
 
           <div className="flex gap-2 mt-7">
             <button
-              className="bg-accent text-[#0d1410] px-[18px] py-2 rounded-sm font-semibold text-[13px] transition-opacity duration-150 hover:opacity-[0.88] active:scale-[0.98]"
+              className="bg-accent text-[#0d1410] px-[18px] py-2 rounded-sm font-semibold text-[13px] transition-[opacity,transform] duration-150 ease-ui hover:opacity-[0.88] active:scale-[0.97]"
               onClick={handleSave}
             >
               Save
             </button>
             {canCancel && (
               <button
-                className="bg-transparent text-ink-muted px-3.5 py-2 rounded-sm border border-bdr text-[13px] transition-[border-color,color] duration-150 hover:border-[#3a3a44] hover:text-ink active:scale-[0.98]"
+                className="bg-transparent text-ink-muted px-3.5 py-2 rounded-sm border border-bdr text-[13px] transition-[border-color,color,transform] duration-150 ease-ui hover:border-[#3a3a44] hover:text-ink active:scale-[0.97]"
                 onClick={onCancel}
               >
                 Cancel

@@ -120,7 +120,7 @@ export function MainScreen({ config, repo, onOpenSettings }: Props) {
         <div className="px-2.5 py-3 border-t border-bdr-subtle flex flex-col gap-1.5">
           {!loading && !error && <StandupSummary issues={issues} />}
           <button
-            className="flex items-center gap-1.5 bg-transparent text-ink-muted px-2 py-1.5 rounded-sm border border-transparent text-xs font-medium transition-[background,color,border-color] duration-150 w-full hover:bg-surface-2 hover:text-ink hover:border-bdr"
+            className="flex items-center gap-1.5 bg-transparent text-ink-muted px-2 py-1.5 rounded-sm border border-transparent text-xs font-medium transition-[background,color,border-color,transform] duration-150 ease-ui w-full hover:bg-surface-2 hover:text-ink hover:border-bdr active:scale-[0.97]"
             onClick={onOpenSettings}
           >
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -150,7 +150,7 @@ export function MainScreen({ config, repo, onOpenSettings }: Props) {
             </div>
             <p className="text-xs text-danger-text/80 mb-3.5 leading-relaxed">{error}</p>
             <button
-              className="bg-transparent text-ink-muted px-3.5 py-2 rounded-sm border border-bdr text-[13px] transition-[border-color,color] duration-150 hover:border-[#3a3a44] hover:text-ink active:scale-[0.98]"
+              className="bg-transparent text-ink-muted px-3.5 py-2 rounded-sm border border-bdr text-[13px] transition-[border-color,color,transform] duration-150 ease-ui hover:border-[#3a3a44] hover:text-ink active:scale-[0.97]"
               onClick={() => load()}
             >
               Retry
