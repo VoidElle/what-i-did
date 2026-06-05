@@ -1,11 +1,12 @@
-# what-i-did
+# What I did
 
 ![Tauri](https://img.shields.io/badge/Tauri-2-24C8DB?style=flat-square&logo=tauri&logoColor=white)
 ![React](https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react&logoColor=black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-5-646CFF?style=flat-square&logo=vite&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-8-646CFF?style=flat-square&logo=vite&logoColor=white)
+![Bun](https://img.shields.io/badge/Bun-1-fbf0df?style=flat-square&logo=bun&logoColor=black)
 ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
-![Platform](https://img.shields.io/badge/Platform-macOS-lightgrey?style=flat-square&logo=apple)
+![Platform](https://img.shields.io/badge/Platform-macOS%20%7C%20Windows%20%7C%20Linux-lightgrey?style=flat-square)
 
 > A lightweight desktop app that pulls your Jira activity from the previous working day and turns it into a clean standup summary, ready to paste, no copy-pasting from browser tabs.
 
@@ -46,7 +47,7 @@ Every standup I'd blank on what I actually did the day before. And if it was a F
 
 ## Requirements
 
-- [Node.js](https://nodejs.org/) >= 18
+- [Bun](https://bun.sh/) >= 1.0
 - [Rust](https://rustup.rs/) (stable toolchain)
 - [Tauri prerequisites](https://tauri.app/start/prerequisites/) for your OS
 
@@ -54,13 +55,13 @@ Every standup I'd blank on what I actually did the day before. And if it was a F
 
 ```bash
 # Install JS dependencies
-npm install
+bun install
 
 # Run in development mode
-npm run tauri dev
+bun tauri dev
 
 # Build a production binary
-npm run tauri build
+bun tauri build
 ```
 
 ## Configuration
@@ -84,7 +85,8 @@ Accent color and mock mode live in the **Customization** screen (palette icon in
 |-------|------|
 | Desktop shell | Tauri 2 |
 | Frontend | React 18 + TypeScript |
-| Build tool | Vite 5 |
+| Build tool | Vite 8 |
+| Package manager | Bun |
 | Styling | Tailwind CSS v4 |
 | Icons | Phosphor Icons |
 | HTTP | `@tauri-apps/plugin-http` |
