@@ -35,11 +35,14 @@ function App() {
   }
 
   return (
-    <MainScreen
-      config={config}
-      repo={repo}
-      onOpenSettings={() => setScreen("settings")}
-    />
+    <>
+      <div className="noise-overlay" aria-hidden="true" />
+      <MainScreen
+        config={config}
+        repo={repo}
+        onOpenSettings={() => setScreen("settings")}
+      />
+    </>
   );
 }
 

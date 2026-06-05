@@ -148,56 +148,65 @@ export function IssueCard({
 
   return (
     <div
-      className={[
-        "bg-surface border rounded p-[14px_16px] mb-1.5 animate-card-in cursor-pointer select-none",
-        "transition-[border-color,background,transform] duration-[180ms] ease-ui active:scale-[0.99]",
-        expanded
-          ? "border-[#32323a] bg-surface-2"
-          : "border-bdr hover:bg-surface-hover hover:border-[#32323a]",
-      ].join(" ")}
-      style={{ animationDelay: `${staggerIndex * 45}ms` }}
+      className="card-shell animate-card-in select-none cursor-pointer"
+      style={{
+        animationDelay: `${staggerIndex * 50}ms`,
+        transition: "box-shadow 220ms cubic-bezier(0.16,1,0.3,1), border-color 220ms cubic-bezier(0.16,1,0.3,1)",
+      }}
       onClick={toggle}
     >
+      <div
+        className="card-core p-[14px_16px]"
+        style={{
+          transition: "background 220ms cubic-bezier(0.16,1,0.3,1)",
+          background: expanded ? "#151519" : "#111114",
+        }}
+        onMouseEnter={e => { if (!expanded) (e.currentTarget.style.background = "#141418"); }}
+        onMouseLeave={e => { if (!expanded) (e.currentTarget.style.background = "#111114"); }}
+      >
       {/* Header */}
       <div className="flex items-center justify-between mb-1.5 group">
         <div className="flex items-center gap-1.5 min-w-0">
-          <span className="flex-shrink-0 flex items-center opacity-90">
+          <span className="flex-shrink-0 flex items-center opacity-80">
             <IssueTypeIcon typeName={issue.issueType.name} />
           </span>
-          <span className="text-[11px] font-semibold text-accent font-mono tracking-[0.3px] flex-shrink-0 group-hover:underline underline-offset-2">
+          <span className="text-[10.5px] font-semibold text-accent font-mono tracking-[0.4px] flex-shrink-0 group-hover:underline underline-offset-2">
             {issue.key}
           </span>
         </div>
-        <div className="flex items-center gap-2.5 flex-shrink-0">
+        <div className="flex items-center gap-2 flex-shrink-0">
           <span
-            className="text-[10px] font-semibold uppercase tracking-[0.4px] px-2 py-[3px] rounded-sm whitespace-nowrap leading-none"
+            className="text-[9.5px] font-bold uppercase tracking-[0.5px] px-[7px] py-[3px] rounded whitespace-nowrap leading-none"
             style={{ backgroundColor: statusStyle.bg, color: statusStyle.text }}
           >
             {issue.status.name}
           </span>
-          {/* Chevron rotates with strong ease-out */}
-          <span className={`text-ink-faint flex items-center transition-transform duration-200 ease-ui ${expanded ? "rotate-180" : ""}`}>
-            <CaretDown size={11} weight="bold" />
+          <span className={`text-ink-faint flex items-center ${expanded ? "rotate-180" : ""}`}
+            style={{ transition: "transform 260ms cubic-bezier(0.34,1.56,0.64,1)" }}>
+            <CaretDown size={10} weight="bold" />
           </span>
         </div>
       </div>
 
-      <p className="text-[13px] text-ink mb-2.5 leading-[1.45]">{issue.summary}</p>
+      <p className="text-[13px] text-ink mb-2.5 leading-[1.45] tracking-[-0.1px]">{issue.summary}</p>
 
       {/* Meta chips */}
       <div className="flex gap-1 flex-wrap">
         {issue.priority && <PriorityBadge name={issue.priority.name} />}
-        <span className="text-[10px] font-medium bg-surface-2 border border-bdr text-ink-muted/90 px-[7px] py-[2px] rounded">
+        <span className="text-[10px] font-medium text-ink-faint px-[7px] py-[2px] rounded"
+          style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}>
           {new Date(issue.updatedAt).toLocaleDateString()}
         </span>
         {issue.comments.length > 0 && (
-          <span className="flex items-center gap-[3px] text-[10px] font-medium bg-surface-2 border border-bdr text-ink-muted/90 px-[7px] py-[2px] rounded">
+          <span className="flex items-center gap-[3px] text-[10px] font-medium text-ink-faint px-[7px] py-[2px] rounded"
+            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}>
             <ChatCircle size={10} />
             {issue.comments.length}
           </span>
         )}
         {recentStatusChanges.length > 0 && (
-          <span className="flex items-center gap-[3px] text-[10px] font-medium bg-warn-dim border border-warn-border text-warn px-[7px] py-[2px] rounded">
+          <span className="flex items-center gap-[3px] text-[10px] font-medium text-warn px-[7px] py-[2px] rounded"
+            style={{ background: "rgba(251,191,36,0.08)", border: "1px solid rgba(245,158,11,0.18)" }}>
             <ArrowsClockwise size={10} />
             Status changed
           </span>
@@ -210,15 +219,20 @@ export function IssueCard({
         Always rendered in DOM (accessible, interruptible).
       */}
       <div
-        className="grid transition-[grid-template-rows] duration-300 ease-ui"
-        style={{ gridTemplateRows: expanded ? "1fr" : "0fr" }}
+        className="grid"
+        style={{
+          gridTemplateRows: expanded ? "1fr" : "0fr",
+          transition: "grid-template-rows 320ms cubic-bezier(0.16,1,0.3,1)",
+        }}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="overflow-hidden min-h-0">
           <div
-            className={`mt-3.5 border-t border-bdr-subtle pt-4 flex flex-col gap-[18px] transition-opacity duration-200 ease-ui ${
-              expanded ? "opacity-100" : "opacity-0"
-            }`}
+            className={`mt-3.5 pt-4 flex flex-col gap-[18px] ${expanded ? "opacity-100" : "opacity-0"}`}
+            style={{
+              borderTop: "1px solid rgba(255,255,255,0.05)",
+              transition: "opacity 200ms cubic-bezier(0.16,1,0.3,1)",
+            }}
           >
             {/* ── Status changes ───────────────────────────────────────────── */}
             {(() => {
@@ -413,6 +427,7 @@ export function IssueCard({
             )}
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

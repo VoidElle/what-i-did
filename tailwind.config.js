@@ -7,14 +7,15 @@ export default {
   theme: {
     extend: {
       colors: {
-        bg:       "#0d0d10",
-        surface:  { DEFAULT: "#17171b", 2: "#202026", hover: "#26262d" },
-        bdr:      { DEFAULT: "#2e2e36", subtle: "#232329" },
-        ink:      { DEFAULT: "#f0f0f4", muted: "#a8a8b4", faint: "#8c8c9c" },
+        bg:       "#080809",
+        surface:  { DEFAULT: "#111114", 2: "#1a1a1f", hover: "#202026" },
+        bdr:      { DEFAULT: "#2a2a34", subtle: "#1e1e26" },
+        ink:      { DEFAULT: "#ededf2", muted: "#9898a8", faint: "#5e5e72" },
         accent:   {
           DEFAULT: "#34d399",
-          dim:     "rgba(52,211,153,0.09)",
-          border:  "rgba(52,211,153,0.22)",
+          dim:     "rgba(52,211,153,0.08)",
+          border:  "rgba(52,211,153,0.18)",
+          glow:    "rgba(52,211,153,0.12)",
         },
         warn:     { DEFAULT: "#fbbf24", dim: "rgba(251,191,36,0.10)", border: "rgba(245,158,11,0.2)" },
         danger:   {
@@ -28,39 +29,54 @@ export default {
         mono: ["'Geist Mono Variable'", "'SF Mono'", "'Fira Code'", "monospace"],
       },
       borderRadius: {
-        sm: "6px",
-        DEFAULT: "10px",
-        lg: "14px",
+        sm:   "5px",
+        DEFAULT: "9px",
+        lg:   "13px",
+        xl:   "16px",
+        "2xl": "20px",
+        "3xl": "26px",
       },
       transitionTimingFunction: {
-        // Strong ease-out for UI interactions — starts fast, feels responsive
-        ui:     "cubic-bezier(0.23, 1, 0.32, 1)",
-        // Strong ease-in-out for on-screen movement
+        // Expo-out — feels instant, heavy deceleration
+        ui:     "cubic-bezier(0.16, 1, 0.3, 1)",
+        // Spring with subtle overshoot — for card reveals & popups
+        spring: "cubic-bezier(0.34, 1.56, 0.64, 1)",
+        // In-out for symmetrical transitions
         inout:  "cubic-bezier(0.77, 0, 0.175, 1)",
+      },
+      boxShadow: {
+        // Ambient OLED glow: no hard edges, pure atmosphere
+        "glow-accent": "0 0 0 1px rgba(52,211,153,0.16), 0 0 24px rgba(52,211,153,0.06)",
+        "card":        "0 1px 0 rgba(255,255,255,0.03) inset, 0 -1px 0 rgba(0,0,0,0.4) inset",
+        "card-hover":  "0 1px 0 rgba(255,255,255,0.05) inset, 0 -1px 0 rgba(0,0,0,0.4) inset, 0 4px 24px rgba(0,0,0,0.3)",
+        "inset-top":   "inset 0 1px 0 rgba(255,255,255,0.06)",
       },
       keyframes: {
         shimmer: {
           "0%":   { backgroundPosition: "-400px 0" },
           "100%": { backgroundPosition:  "400px 0" },
         },
-        // Card entry: start from scale(0.98) — nothing appears from nothing
         "card-in": {
-          from: { opacity: "0", transform: "translateY(8px) scale(0.98)" },
+          from: { opacity: "0", transform: "translateY(10px) scale(0.985)" },
           to:   { opacity: "1", transform: "translateY(0) scale(1)" },
         },
-        // Small fade-up for content swaps (e.g. copy button state transition)
         "fade-up": {
-          from: { opacity: "0", transform: "translateY(3px)" },
+          from: { opacity: "0", transform: "translateY(4px)" },
+          to:   { opacity: "1", transform: "translateY(0)" },
+        },
+        "slide-down": {
+          from: { opacity: "0", transform: "translateY(-6px)" },
           to:   { opacity: "1", transform: "translateY(0)" },
         },
       },
       animation: {
-        shimmer:  "shimmer 1.6s linear infinite",
-        "card-in": "card-in 280ms cubic-bezier(0.23, 1, 0.32, 1) both",
-        "fade-up": "fade-up 150ms cubic-bezier(0.23, 1, 0.32, 1)",
+        shimmer:      "shimmer 1.6s linear infinite",
+        "card-in":    "card-in 380ms cubic-bezier(0.16, 1, 0.3, 1) both",
+        "fade-up":    "fade-up 200ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "slide-down": "slide-down 200ms cubic-bezier(0.16, 1, 0.3, 1)",
       },
-      width: { sidebar: "224px" },
-      minWidth: { sidebar: "224px" },
+      width: { sidebar: "220px" },
+      minWidth: { sidebar: "220px" },
     },
   },
   plugins: [],
