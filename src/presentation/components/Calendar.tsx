@@ -1,17 +1,12 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { CalendarBlank, CaretLeft, CaretRight } from "@phosphor-icons/react";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   value: Date;
   onChange: (date: Date) => void;
 }
-
-const WEEKDAYS = ["S", "M", "T", "W", "T", "F", "S"];
-const MONTHS = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
-];
 
 function startOfDay(d: Date): Date {
   const x = new Date(d);
@@ -39,6 +34,16 @@ function buildGrid(viewMonth: Date): (Date | null)[] {
 }
 
 export function Calendar({ value, onChange }: Props) {
+  const { t, i18n } = useTranslation();
+  const locale = i18n.language;
+
+  const MONTHS = Array.from({ length: 12 }, (_, i) =>
+    new Intl.DateTimeFormat(locale, { month: "long" }).format(new Date(2024, i, 1))
+  );
+  const WEEKDAYS = Array.from({ length: 7 }, (_, i) =>
+    new Intl.DateTimeFormat(locale, { weekday: "narrow" }).format(new Date(2024, 0, 7 + i))
+  );
+
   const [open, setOpen] = useState(false);
   const [view, setView] = useState(() => startOfDay(value));
   const [pos, setPos] = useState<{ left: number; top: number }>({ left: 0, top: 0 });
@@ -73,10 +78,10 @@ export function Calendar({ value, onChange }: Props) {
   useEffect(() => {
     if (!open) return;
     const onClick = (e: MouseEvent) => {
-      const t = e.target as Node;
+      const target = e.target as Node;
       if (
-        btnRef.current && !btnRef.current.contains(t) &&
-        popRef.current && !popRef.current.contains(t)
+        btnRef.current && !btnRef.current.contains(target) &&
+        popRef.current && !popRef.current.contains(target)
       ) {
         setOpen(false);
       }
@@ -104,11 +109,7 @@ export function Calendar({ value, onChange }: Props) {
     setView((v) => new Date(v.getFullYear(), v.getMonth() + delta, 1));
 
   const label = value
-    .toLocaleDateString(undefined, {
-      weekday: "long",
-      month: "long",
-      day: "numeric",
-    })
+    .toLocaleDateString(locale, { weekday: "long", month: "long", day: "numeric" })
     .replace(/\b\w/g, (c) => c.toUpperCase());
 
   return (
@@ -128,7 +129,6 @@ export function Calendar({ value, onChange }: Props) {
           style={{ left: pos.left, top: pos.top, width: POPOVER_WIDTH }}
           className="fixed z-50 bg-surface border border-bdr rounded p-2.5 shadow-[0_12px_32px_rgba(0,0,0,0.5)] animate-fade-up"
         >
-          {/* Header */}
           <div className="flex items-center justify-between mb-2">
             <button
               className="w-6 h-6 flex items-center justify-center rounded-sm text-ink-muted hover:bg-surface-2 hover:text-ink transition-colors duration-150"
@@ -149,7 +149,6 @@ export function Calendar({ value, onChange }: Props) {
             </button>
           </div>
 
-          {/* Weekday labels */}
           <div className="grid grid-cols-7 mb-1">
             {WEEKDAYS.map((w, i) => (
               <span
@@ -161,7 +160,6 @@ export function Calendar({ value, onChange }: Props) {
             ))}
           </div>
 
-          {/* Days */}
           <div className="grid grid-cols-7 gap-0.5">
             {cells.map((d, i) =>
               d === null ? (
@@ -190,7 +188,6 @@ export function Calendar({ value, onChange }: Props) {
             )}
           </div>
 
-          {/* Quick actions */}
           <div className="flex gap-1 mt-2 pt-2 border-t border-bdr-subtle">
             <button
               className="flex-1 text-[10px] font-medium text-ink-muted bg-surface-2 border border-bdr rounded-sm py-1 hover:text-ink hover:border-[#3a3a44] transition-colors duration-150"
@@ -200,13 +197,13 @@ export function Calendar({ value, onChange }: Props) {
                 select(y);
               }}
             >
-              Yesterday
+              {t("yesterday")}
             </button>
             <button
               className="flex-1 text-[10px] font-medium text-ink-muted bg-surface-2 border border-bdr rounded-sm py-1 hover:text-ink hover:border-[#3a3a44] transition-colors duration-150"
               onClick={() => select(today)}
             >
-              Today
+              {t("today")}
             </button>
           </div>
         </div>,
