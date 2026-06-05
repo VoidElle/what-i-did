@@ -13,6 +13,7 @@ interface Props {
   config: SourceConfig;
   repo: IActivityRepository;
   onOpenSettings: () => void;
+  onOpenCustomization: () => void;
 }
 
 function groupByProject(issues: ActivityIssue[]): Map<string, ActivityIssue[]> {
@@ -46,7 +47,7 @@ function SkeletonCard() {
   );
 }
 
-export function MainScreen({ config, repo, onOpenSettings }: Props) {
+export function MainScreen({ config, repo, onOpenSettings, onOpenCustomization }: Props) {
   const [issues, setIssues] = useState<ActivityIssue[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -176,6 +177,21 @@ export function MainScreen({ config, repo, onOpenSettings }: Props) {
         {/* Footer */}
         <div className="px-2.5 py-3 flex flex-col gap-1.5" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
           {!loading && !error && <StandupSummary issues={issues} windowStart={window.start} windowEnd={window.end} />}
+          <button
+            className="flex items-center gap-1.5 text-ink-faint px-2 py-1.5 rounded text-xs font-medium w-full"
+            style={{ transition: "background 200ms cubic-bezier(0.16,1,0.3,1), color 200ms cubic-bezier(0.16,1,0.3,1)", background: "transparent" }}
+            onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.04)"; e.currentTarget.style.color = "#9898a8"; }}
+            onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#5e5e72"; }}
+            onMouseDown={e => (e.currentTarget.style.transform = "scale(0.97)")}
+            onMouseUp={e => (e.currentTarget.style.transform = "scale(1)")}
+            onClick={onOpenCustomization}
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="4" />
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+            </svg>
+            Customization
+          </button>
           <button
             className="flex items-center gap-1.5 text-ink-faint px-2 py-1.5 rounded text-xs font-medium w-full"
             style={{ transition: "background 200ms cubic-bezier(0.16,1,0.3,1), color 200ms cubic-bezier(0.16,1,0.3,1)", background: "transparent" }}

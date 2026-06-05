@@ -19,8 +19,6 @@ export function SettingsScreen({
   const [baseUrl, setBaseUrl] = useState(initialConfig?.baseUrl ?? "");
   const [email, setEmail] = useState(initialConfig?.email ?? "");
   const [token, setToken] = useState(initialConfig?.token ?? "");
-  const [devMode, setDevMode] = useState(initialConfig?.devMode ?? false);
-  const [theme, setTheme] = useState(initialConfig?.theme ?? "emerald");
   const [error, setError] = useState("");
 
   const handleSave = () => {
@@ -33,8 +31,8 @@ export function SettingsScreen({
       baseUrl: baseUrl.replace(/\/$/, "").trim(),
       email: email.trim(),
       token: token.trim(),
-      devMode,
-      theme,
+      devMode: initialConfig?.devMode ?? false,
+      theme: initialConfig?.theme ?? "emerald",
     });
   };
 
@@ -109,69 +107,6 @@ export function SettingsScreen({
             </div>
           )}
 
-          {/* Theme */}
-          <div className="mt-8 pt-4" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
-            <p className="text-[11px] text-ink-faint mb-3">Accent color</p>
-            <div className="flex gap-2.5">
-              {[
-                { id: "emerald", color: "#34d399" },
-                { id: "indigo",  color: "#818cf8" },
-                { id: "rose",    color: "#fb7185" },
-                { id: "sky",     color: "#38bdf8" },
-                { id: "violet",  color: "#a78bfa" },
-              ].map(({ id, color }) => (
-                <button
-                  key={id}
-                  type="button"
-                  onClick={() => {
-                    setTheme(id);
-                    document.documentElement.setAttribute("data-theme", id);
-                  }}
-                  style={{
-                    width: 20,
-                    height: 20,
-                    borderRadius: "50%",
-                    background: color,
-                    outline: theme === id ? `2px solid ${color}` : "none",
-                    outlineOffset: 2,
-                    transition: "outline 150ms cubic-bezier(0.16,1,0.3,1)",
-                    flexShrink: 0,
-                  }}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Mock mode */}
-          <div className="mt-8 pt-4" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
-            <button
-              type="button"
-              className="flex items-center justify-between w-full"
-              onClick={() => setDevMode((v) => !v)}
-            >
-              <span className="text-[11px] text-ink-faint">Mock mode</span>
-              <div
-                className="relative flex-shrink-0 w-7 h-4 rounded-full ml-4"
-                style={{
-                  background: devMode ? "rgba(var(--accent-rgb), 0.7)" : "rgba(255,255,255,0.08)",
-                  transition: "background 200ms cubic-bezier(0.16,1,0.3,1)",
-                }}
-              >
-                <div
-                  className="absolute top-[2px] w-3 h-3 rounded-full"
-                  style={{
-                    background: devMode ? "#0d1410" : "rgba(255,255,255,0.35)",
-                    left: devMode ? "calc(100% - 14px)" : "2px",
-                    transition: "left 200ms cubic-bezier(0.34,1.56,0.64,1)",
-                  }}
-                />
-              </div>
-            </button>
-            <p className="mt-1.5 text-[10px] text-ink-faint leading-relaxed" style={{ opacity: 0.5 }}>
-              Uses mock data with multiple projects and tickets. No Jira connection needed.
-            </p>
-          </div>
-
           <div className="flex gap-2 mt-6">
             <button
               className="text-[#0d1410] px-[18px] py-2 rounded-sm font-semibold text-[13px] transition-[opacity,transform] duration-150 ease-ui hover:opacity-[0.88] active:scale-[0.97]"
@@ -182,7 +117,8 @@ export function SettingsScreen({
             </button>
             {canCancel && (
               <button
-                className="bg-transparent text-ink-muted px-3.5 py-2 rounded-sm border border-bdr text-[13px] transition-[border-color,color,transform] duration-150 ease-ui hover:border-[#3a3a44] hover:text-ink active:scale-[0.97]"
+                className="bg-transparent text-ink-muted px-3.5 py-2 rounded-sm text-[13px] font-medium transition-[color,transform] duration-150 ease-ui hover:text-ink active:scale-[0.97]"
+                style={{ border: "1px solid rgba(255,255,255,0.22)" }}
                 onClick={onCancel}
               >
                 Cancel

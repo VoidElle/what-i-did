@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { useSourceConfig } from "./presentation/hooks/useSourceConfig";
 import { SettingsScreen } from "./presentation/components/Settings";
+import { CustomizationScreen } from "./presentation/components/CustomizationScreen";
 import { MainScreen } from "./presentation/components/MainScreen";
 import { JiraActivityRepository } from "./data/jira/repository";
 
-type Screen = "main" | "settings";
+type Screen = "main" | "settings" | "customization";
 
 const repo = new JiraActivityRepository();
 
@@ -38,6 +39,16 @@ function App() {
     );
   }
 
+  if (screen === "customization") {
+    return (
+      <CustomizationScreen
+        config={config}
+        onSave={(cfg) => saveConfig(cfg)}
+        onCancel={() => setScreen("main")}
+      />
+    );
+  }
+
   return (
     <>
       <div className="noise-overlay" aria-hidden="true" />
@@ -45,6 +56,7 @@ function App() {
         config={config}
         repo={repo}
         onOpenSettings={() => setScreen("settings")}
+        onOpenCustomization={() => setScreen("customization")}
       />
     </>
   );
