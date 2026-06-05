@@ -4,8 +4,11 @@ import { getAttachmentBlob, getWorklogs, getYesterdayIssues } from "./client";
 import { mapIssue, mapWorklog } from "./mapper";
 
 export class JiraActivityRepository implements IActivityRepository {
-  async fetchYesterdayIssues(config: SourceConfig): Promise<ActivityIssue[]> {
-    const raw = await getYesterdayIssues(config);
+  async fetchYesterdayIssues(
+    config: SourceConfig,
+    date: Date
+  ): Promise<ActivityIssue[]> {
+    const raw = await getYesterdayIssues(config, date);
     return raw.map(mapIssue);
   }
 

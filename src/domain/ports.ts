@@ -1,7 +1,7 @@
 import type { ActivityIssue, SourceConfig, Worklog } from "./entities";
 
 export interface IActivityRepository {
-  fetchYesterdayIssues(config: SourceConfig): Promise<ActivityIssue[]>;
+  fetchYesterdayIssues(config: SourceConfig, date: Date): Promise<ActivityIssue[]>;
   fetchWorklogs(config: SourceConfig, issueKey: string): Promise<Worklog[]>;
   fetchAttachmentUrl(
     config: SourceConfig,

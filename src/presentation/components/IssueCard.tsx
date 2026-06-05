@@ -14,14 +14,19 @@ import {
 import type { ActivityIssue, Worklog } from "../../domain/entities";
 import { AttachmentList } from "./AttachmentList";
 
-const WINDOW_MS = 24 * 60 * 60 * 1000;
-
-const STATUS_COLOR: Record<string, string> = {
-  "blue-grey": "#5e6c84",
-  yellow:      "#f59e0b",
-  green:       "#34d399",
-  red:         "#f87171",
+const STATUS_STYLE: Record<string, { bg: string; text: string }> = {
+  "blue-gray":   { bg: "rgba(101,118,148,0.18)", text: "#aab7c9" },
+  "blue-grey":   { bg: "rgba(101,118,148,0.18)", text: "#aab7c9" },
+  "medium-gray": { bg: "rgba(101,118,148,0.18)", text: "#aab7c9" },
+  "medium-grey": { bg: "rgba(101,118,148,0.18)", text: "#aab7c9" },
+  yellow:        { bg: "rgba(12,102,228,0.18)",  text: "#7eb0ff" },
+  green:         { bg: "rgba(0,135,90,0.20)",    text: "#4cce9a" },
+  brown:         { bg: "rgba(255,153,31,0.18)",  text: "#ffb868" },
+  "warm-red":    { bg: "rgba(222,53,11,0.18)",   text: "#ff8f73" },
+  red:           { bg: "rgba(222,53,11,0.18)",   text: "#ff8f73" },
 };
+
+const DEFAULT_STATUS_STYLE = STATUS_STYLE["blue-gray"];
 
 function IssueTypeIcon({ typeName }: { typeName: string }) {
   const p = { size: 13, weight: "duotone" as const };
@@ -38,6 +43,8 @@ function IssueTypeIcon({ typeName }: { typeName: string }) {
 interface IssueCardProps {
   issue: ActivityIssue;
   staggerIndex?: number;
+  windowStart: number;
+  windowEnd: number;
   onLoadWorklogs: (issueKey: string) => Promise<Worklog[]>;
   onFetchAttachmentUrl: (contentUrl: string, mimeType: string) => Promise<string>;
 }
@@ -45,6 +52,8 @@ interface IssueCardProps {
 export function IssueCard({
   issue,
   staggerIndex = 0,
+  windowStart,
+  windowEnd,
   onLoadWorklogs,
   onFetchAttachmentUrl,
 }: IssueCardProps) {
@@ -52,12 +61,12 @@ export function IssueCard({
   const [worklogs, setWorklogs] = useState<Worklog[] | null>(null);
   const [loadingWorklogs, setLoadingWorklogs] = useState(false);
 
-  const dotColor = STATUS_COLOR[issue.status.colorName] ?? "#5e6c84";
+  const statusStyle = STATUS_STYLE[issue.status.colorName] ?? DEFAULT_STATUS_STYLE;
 
-  const cutoff = Date.now() - WINDOW_MS;
-  const recentStatusChanges = issue.statusChanges.filter(
-    (s) => new Date(s.changedAt).getTime() >= cutoff
-  );
+  const recentStatusChanges = issue.statusChanges.filter((s) => {
+    const t = new Date(s.changedAt).getTime();
+    return t >= windowStart && t < windowEnd;
+  });
 
   const toggle = async () => {
     const next = !expanded;
@@ -73,19 +82,17 @@ export function IssueCard({
   return (
     <div
       className={[
-        "bg-surface border rounded p-[14px_16px] mb-1.5 animate-card-in",
-        "transition-[border-color,background] duration-[180ms] ease-ui",
+        "bg-surface border rounded p-[14px_16px] mb-1.5 animate-card-in cursor-pointer select-none",
+        "transition-[border-color,background,transform] duration-[180ms] ease-ui active:scale-[0.99]",
         expanded
           ? "border-[#32323a] bg-surface-2"
           : "border-bdr hover:bg-surface-hover hover:border-[#32323a]",
       ].join(" ")}
       style={{ animationDelay: `${staggerIndex * 45}ms` }}
+      onClick={toggle}
     >
-      {/* Header — scale on press for tactile feedback */}
-      <div
-        className="flex items-center justify-between mb-1.5 cursor-pointer select-none group transition-transform duration-[100ms] ease-ui active:scale-[0.98]"
-        onClick={toggle}
-      >
+      {/* Header */}
+      <div className="flex items-center justify-between mb-1.5 group">
         <div className="flex items-center gap-1.5 min-w-0">
           <span className="flex-shrink-0 flex items-center opacity-90">
             <IssueTypeIcon typeName={issue.issueType.name} />
@@ -98,8 +105,10 @@ export function IssueCard({
           )}
         </div>
         <div className="flex items-center gap-2.5 flex-shrink-0">
-          <span className="flex items-center gap-1 text-[11px] font-medium text-ink-muted whitespace-nowrap">
-            <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: dotColor }} />
+          <span
+            className="text-[10px] font-semibold uppercase tracking-[0.4px] px-2 py-[3px] rounded-sm whitespace-nowrap leading-none"
+            style={{ backgroundColor: statusStyle.bg, color: statusStyle.text }}
+          >
             {issue.status.name}
           </span>
           {/* Chevron rotates with strong ease-out */}
@@ -143,6 +152,7 @@ export function IssueCard({
       <div
         className="grid transition-[grid-template-rows] duration-300 ease-ui"
         style={{ gridTemplateRows: expanded ? "1fr" : "0fr" }}
+        onClick={(e) => e.stopPropagation()}
       >
         <div className="overflow-hidden min-h-0">
           <div

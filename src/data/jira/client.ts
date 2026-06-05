@@ -14,12 +14,23 @@ function jsonHeaders(email: string, token: string): Record<string, string> {
   };
 }
 
+function jqlDate(d: Date): string {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
 export async function getYesterdayIssues(
-  config: SourceConfig
+  config: SourceConfig,
+  date: Date
 ): Promise<JiraIssueRaw[]> {
   const { baseUrl, email, token } = config;
-  const jql =
-    'assignee = currentUser() AND updated >= "-1d" ORDER BY updated DESC';
+  const start = new Date(date);
+  start.setHours(0, 0, 0, 0);
+  const end = new Date(start);
+  end.setDate(end.getDate() + 1);
+  const jql = `assignee = currentUser() AND updated >= "${jqlDate(start)}" AND updated < "${jqlDate(end)}" ORDER BY updated DESC`;
   const fields =
     "summary,description,status,assignee,issuetype,priority,updated,comment,project,attachment";
   const url = `${baseUrl}/rest/api/3/search/jql?jql=${encodeURIComponent(jql)}&fields=${encodeURIComponent(fields)}&expand=changelog&maxResults=50`;

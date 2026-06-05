@@ -2,10 +2,11 @@ import { useState, useEffect } from "react";
 import { Warning } from "@phosphor-icons/react";
 import type { ActivityIssue, SourceConfig } from "../../domain/entities";
 import type { IActivityRepository } from "../../domain/ports";
-import { fetchYesterdayActivity } from "../../application/fetchYesterdayActivity";
+import { fetchYesterdayActivity, dayWindow } from "../../application/fetchYesterdayActivity";
 import { IssueCard } from "./IssueCard";
 import { StandupSummary } from "./StandupSummary";
 import { BrandIcon } from "./BrandIcon";
+import { Calendar } from "./Calendar";
 
 interface Props {
   config: SourceConfig;
@@ -23,13 +24,11 @@ function groupByProject(issues: ActivityIssue[]): Map<string, ActivityIssue[]> {
   return map;
 }
 
-function formatYesterday(): string {
-  const d = new Date(Date.now() - 24 * 60 * 60 * 1000);
-  return d.toLocaleDateString(undefined, {
-    weekday: "long",
-    month: "short",
-    day: "numeric",
-  });
+function defaultDate(): Date {
+  const d = new Date();
+  d.setDate(d.getDate() - 1);
+  d.setHours(0, 0, 0, 0);
+  return d;
 }
 
 function SkeletonCard() {
@@ -50,11 +49,12 @@ export function MainScreen({ config, repo, onOpenSettings }: Props) {
   const [issues, setIssues] = useState<ActivityIssue[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [date, setDate] = useState<Date>(defaultDate);
 
   const load = (cancelled?: { current: boolean }) => {
     setLoading(true);
     setError(null);
-    fetchYesterdayActivity(repo, config)
+    fetchYesterdayActivity(repo, config, date)
       .then((data) => { if (!cancelled?.current) setIssues(data); })
       .catch((e: Error) => { if (!cancelled?.current) setError(e.message); })
       .finally(() => { if (!cancelled?.current) setLoading(false); });
@@ -64,8 +64,9 @@ export function MainScreen({ config, repo, onOpenSettings }: Props) {
     const c = { current: false };
     load(c);
     return () => { c.current = true; };
-  }, [config, repo]);
+  }, [config, repo, date]);
 
+  const window = dayWindow(date);
   const grouped = groupByProject(issues);
   const projects = [...grouped.keys()];
   let cardIndex = 0;
@@ -84,10 +85,10 @@ export function MainScreen({ config, repo, onOpenSettings }: Props) {
 
         {/* Date */}
         <div className="px-[18px] py-3.5 border-b border-bdr-subtle">
-          <span className="block text-[10px] font-semibold tracking-[0.7px] uppercase text-ink-faint mb-1">
+          <span className="block text-[10px] font-semibold tracking-[0.7px] uppercase text-ink-faint mb-1.5">
             Activity date
           </span>
-          <span className="text-[13px] font-medium text-ink">{formatYesterday()}</span>
+          <Calendar value={date} onChange={setDate} />
         </div>
 
         {/* Nav */}
@@ -178,6 +179,8 @@ export function MainScreen({ config, repo, onOpenSettings }: Props) {
                     key={issue.id}
                     issue={issue}
                     staggerIndex={idx}
+                    windowStart={window.start}
+                    windowEnd={window.end}
                     onLoadWorklogs={(key) => repo.fetchWorklogs(config, key)}
                     onFetchAttachmentUrl={(url, mime) =>
                       repo.fetchAttachmentUrl(config, url, mime)
