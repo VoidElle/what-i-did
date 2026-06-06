@@ -45,6 +45,51 @@ Every standup I'd blank on what I actually did the day before. And if it was a F
 - All credentials stored locally via Tauri's encrypted store, nothing leaves your machine
 - No analytics, no telemetry, no cloud sync
 
+## Install
+
+Download the latest release from the [Releases page](../../releases/latest) and pick the file for your platform.
+
+| Platform | File |
+|---|---|
+| macOS - Apple Silicon (M1 / M2 / M3 / M4) | `what-i-did_x.x.x_aarch64.dmg` |
+| macOS - Intel | `what-i-did_x.x.x_x64.dmg` |
+| Windows 10 / 11 (installer) | `what-i-did_x.x.x_x64-setup.exe` |
+| Windows 10 / 11 (MSI) | `what-i-did_x.x.x_x64_en-US.msi` |
+| Linux - Debian / Ubuntu / Mint | `what-i-did_x.x.x_amd64.deb` |
+| Linux - Fedora / RHEL / openSUSE | `what-i-did-x.x.x-1.x86_64.rpm` |
+| Linux - AppImage (any distro) | `what-i-did_x.x.x_amd64.AppImage` |
+
+### Not sure which Mac you have?
+
+Apple menu -> **About This Mac** -> "Chip" means Apple Silicon, "Processor" means Intel.
+
+### macOS - first launch
+
+macOS may block the app with a "damaged" error because it is not notarized. Two options:
+
+**Option A - Terminal (recommended)**
+1. Open the `.dmg` and drag the app to `/Applications`
+2. Open **Terminal** (Spotlight -> "Terminal")
+3. Run:
+   ```bash
+   xattr -cr /Applications/what-i-did.app
+   ```
+4. Open the app normally
+
+**Option B - System Settings**
+1. Try to open the app (it will be blocked)
+2. Open **System Settings** -> **Privacy & Security**
+3. Scroll down -> click **"Open Anyway"**
+4. Confirm in the dialog
+
+> Cause: app not notarized with Apple. No malware - just no $99/yr Apple cert.
+
+### Windows - SmartScreen warning
+
+Windows may show a SmartScreen prompt because the app is not code-signed. Click **More info** -> **Run anyway**.
+
+---
+
 ## Requirements
 
 - [Bun](https://bun.sh/) >= 1.0
