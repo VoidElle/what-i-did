@@ -72,7 +72,7 @@ macOS may block the app with a "damaged" error because it is not notarized. Two 
 2. Open **Terminal** (Spotlight -> "Terminal")
 3. Run:
    ```bash
-   xattr -cr /Applications/what-i-did.app
+   xattr -cr "/Applications/What I Did.app"
    ```
 4. Open the app normally
 
